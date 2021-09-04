@@ -30,16 +30,17 @@ class Progress:
         self.stop = False
         self.is_stagnant = False
         self.n = 0
-        self.last_episode = {'feed_opt': None}
+        self.last_episode_keys = []
 
     def invoke(self, logs):
         if logs and self.patience is not None:
             episode_log = logs[-1]
+            episode_keys = [row.get('key') for row in episode_log['feed_opt']]
             episode_num = episode_log['episode']
-            if self.start_at <= episode_num and self.last_episode['feed_opt'] == episode_log['feed_opt']:
+            if self.start_at <= episode_num and self.last_episode_keys == episode_keys:
                 if self.n < self.patience:
                     self.n += 1
-                    self.last_episode = episode_log
+                    self.last_episode_keys = episode_keys
                 else:
                     if self.verbose:
                         print('reached the optimized state. Process can be ended.')
@@ -49,7 +50,7 @@ class Progress:
                         self.stop = True
             else:
                 self.n = 0
-                self.last_episode = episode_log
+                self.last_episode_keys = episode_keys
 
 
 class Logs:

@@ -37,6 +37,24 @@ class OptStrategy:
             return seqopt.optimizers.helpers.feed_reposition(feeds[-1], 'reward')
 
 
+class NaiveOpt(OptStrategy):
+
+    def __init__(self,
+                 cutoff_point=0.25,
+                 per_episode=True,
+                 agg_strategy='sum'
+                 ):
+        self.cutoff_point = cutoff_point
+        super().__init__(per_episode, agg_strategy)
+        self.m_key = f'{agg_strategy}_score'
+
+    def __call__(self, logger: Logs):
+        feed_agg = super().agg(logger.feeds)
+        feed_mtr = seqopt.optimizers.helpers.feed_naive(feed_agg, self.m_key)
+        feed_opt = list(filter(lambda x: x[self.m_key] >= 1 * self.cutoff_point, feed_mtr))
+        return seqopt.optimizers.helpers.feed_reposition(feed_opt, self.m_key)
+
+
 class MinMaxScaleOpt(OptStrategy):
 
     def __init__(self,

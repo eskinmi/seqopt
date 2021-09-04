@@ -10,6 +10,14 @@ def feed_reposition(feed, by_key='reward'):
     return f_repos
 
 
+def feed_naive(feed, name):
+    metrics = []
+    for i in feed:
+        i[name] = i['reward']
+        metrics.append(i)
+    return metrics
+
+
 def feed_min_max_norm(feed, name):
     metrics = []
     max_ = max(feed, key=lambda x: x['reward'])['reward']
