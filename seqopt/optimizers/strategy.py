@@ -55,7 +55,7 @@ class NaiveOpt(OptStrategy):
         return seqopt.optimizers.helpers.feed_reposition(feed_opt, self.m_key)
 
 
-class MinMaxScaleOpt(OptStrategy):
+class MinMaxNormOpt(OptStrategy):
 
     def __init__(self,
                  cutoff_point=0.25,
@@ -93,7 +93,7 @@ class LogNormOpt(OptStrategy):
         return seqopt.optimizers.helpers.feed_reposition(feed_opt, self.m_key)
 
 
-class StandardScoreOpt(OptStrategy):
+class StandardNormOpt(OptStrategy):
 
     def __init__(self,
                  ucl=3.0,
@@ -111,7 +111,7 @@ class StandardScoreOpt(OptStrategy):
     def __call__(self, logger: Logs):
         feed_agg = super().agg(logger.feeds)
         feed_mtr = seqopt.optimizers.helpers.feed_standard_score(feed_agg, self.m_key)
-        feed_opt = list(filter(lambda x: x[self.m_key] >= self.lcl and x[self.m_key] >= self.lcl, feed_mtr))
+        feed_opt = list(filter(lambda x: self.lcl <= x[self.m_key] <= self.ucl, feed_mtr))
         return seqopt.optimizers.helpers.feed_reposition(feed_opt, self.m_key)
 
 
