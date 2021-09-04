@@ -14,6 +14,10 @@ an example usage with a log normalization :
 
 ```py
 
+from seqopt import OptModel
+from seqopt import callbacks
+from seqopt import optimizers
+
 model = OptModel(
   input_sequence=input_seq,
   population=population,
