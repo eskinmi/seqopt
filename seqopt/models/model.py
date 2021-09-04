@@ -52,8 +52,8 @@ class OptModel:
             self.progress = progress
 
     @property
-    def is_opt_round(self):
-        return True if bool(self.episode % self.interval) else False
+    def is_opt_episode(self):
+        return False if bool(self.episode % self.interval) else True
 
     def opt(self, feed):
         """
@@ -68,7 +68,7 @@ class OptModel:
         if self.stopper.stop or self.progress.stop:
             return self.logger.feed_opt
         self.logger.log_feed(feed)
-        if self.is_opt_round:
+        if self.is_opt_episode:
             feed_opt = self.optimizer(self.logger)[:self.max_items]
         else:
             if self.logger.logs:
