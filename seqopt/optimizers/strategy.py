@@ -1,5 +1,6 @@
-import seqopt.optimizers.utils
+import seqopt.optimizers.helpers
 from seqopt.callbacks import Logs
+import numpy
 
 
 class OptStrategy:
@@ -13,7 +14,7 @@ class OptStrategy:
         if agg_strategy not in self._acc_strategy:
             raise ValueError(f'agg_strategy must be one of these values : {self._acc_strategy}')
         self.agg_strategy = agg_strategy
-        self.agg_method = getattr(seqopt.optimizers.utils.numpy, self.agg_strategy)
+        self.agg_method = getattr(numpy, self.agg_strategy)
 
     def agg(self, feeds):
         """
@@ -31,9 +32,9 @@ class OptStrategy:
              ]
             units_dict_agg = {k: self.agg_method(v) for k,v in units_dict.items()}
             agg_list = [{'key': k, 'pos': 0, 'reward': v} for k, v in units_dict_agg.items()]
-            return seqopt.optimizers.utils.feed_reposition(agg_list, 'reward')
+            return seqopt.optimizers.helpers.feed_reposition(agg_list, 'reward')
         else:
-            return seqopt.optimizers.utils.feed_reposition(feeds[-1], 'reward')
+            return seqopt.optimizers.helpers.feed_reposition(feeds[-1], 'reward')
 
 
 class MinMaxScaleOpt(OptStrategy):
@@ -49,9 +50,9 @@ class MinMaxScaleOpt(OptStrategy):
 
     def __call__(self, logger: Logs):
         feed_agg = super().agg(logger.feeds)
-        feed_mtr = seqopt.optimizers.utils.feed_min_max_norm(feed_agg, self.m_key)
+        feed_mtr = seqopt.optimizers.helpers.feed_min_max_norm(feed_agg, self.m_key)
         feed_opt = list(filter(lambda x: x[self.m_key] >= 1 * self.cutoff_point, feed_mtr))
-        return seqopt.optimizers.utils.feed_reposition(feed_opt, self.m_key)
+        return seqopt.optimizers.helpers.feed_reposition(feed_opt, self.m_key)
 
 
 class LogNormOpt(OptStrategy):
@@ -62,16 +63,16 @@ class LogNormOpt(OptStrategy):
                  per_episode=True,
                  agg_strategy='sum'
                  ):
-        self.log_base = log_base if log_base is not None else seqopt.optimizers.utils.math.e
+        self.log_base = log_base if log_base is not None else seqopt.optimizers.helpers.math.e
         self.cutoff_point = cutoff_point
         super().__init__(per_episode, agg_strategy)
         self.m_key = 'log_norm_score'
 
     def __call__(self, logger: Logs):
         feed_agg = super().agg(logger.feeds)
-        feed_mtr = seqopt.optimizers.utils.feed_log_norm(feed_agg, self.log_base, self.m_key)
+        feed_mtr = seqopt.optimizers.helpers.feed_log_norm(feed_agg, self.log_base, self.m_key)
         feed_opt = list(filter(lambda x: x[self.m_key] >= 1 * self.cutoff_point, feed_mtr))
-        return seqopt.optimizers.utils.feed_reposition(feed_opt, self.m_key)
+        return seqopt.optimizers.helpers.feed_reposition(feed_opt, self.m_key)
 
 
 class StandardScoreOpt(OptStrategy):
@@ -91,9 +92,9 @@ class StandardScoreOpt(OptStrategy):
 
     def __call__(self, logger: Logs):
         feed_agg = super().agg(logger.feeds)
-        feed_mtr = seqopt.optimizers.utils.feed_standard_score(feed_agg, self.m_key)
+        feed_mtr = seqopt.optimizers.helpers.feed_standard_score(feed_agg, self.m_key)
         feed_opt = list(filter(lambda x: x[self.m_key] >= self.lcl and x[self.m_key] >= self.lcl, feed_mtr))
-        return seqopt.optimizers.utils.feed_reposition(feed_opt, self.m_key)
+        return seqopt.optimizers.helpers.feed_reposition(feed_opt, self.m_key)
 
 
 # class EpsilonGreedyBandit(OptStrategy):
