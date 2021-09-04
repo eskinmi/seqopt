@@ -42,10 +42,10 @@ class Progress:
                     self.last_episode = episode_log
                 else:
                     if self.verbose:
-                        print('Reached the optimized state. Process can be ended.')
+                        print('reached the optimized state. Process can be ended.')
                     self.is_stagnant = True
                     if self.do_stop:
-                        print('Will be stopped.')
+                        print('process will be stopped.')
                         self.stop = True
             else:
                 self.n = 0
