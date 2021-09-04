@@ -25,8 +25,10 @@ class OptStrategy:
         """
         if not self.per_episode:
             units_dict = {}
-            [units_dict.update({i['key']: units_dict.get(i['key'], []) + [i['reward']]})
-             for feed in feeds for i in feed]
+            [
+                units_dict.update({i['key']: units_dict.get(i['key'], []) + [i['reward']]})
+                for feed in feeds for i in feed
+             ]
             units_dict_agg = {k: self.agg_method(v) for k,v in units_dict.items()}
             agg_list = [{'key': k, 'pos': 0, 'reward': v} for k, v in units_dict_agg.items()]
             return feed_reposition(agg_list, 'reward')
