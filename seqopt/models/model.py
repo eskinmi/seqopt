@@ -14,8 +14,16 @@ class OptModel:
         - seqopt.callbacks
             Callbacks
 
+        opt func excepts a feed that is a list of
+            dictionary that hosts the feedback for
+            keys in following schema:
+                [
+                    'key' : name (str),
+                    'reward'  : reward (int / float)
+                    'pos' : position (int) (optional)
+                ]
+
     Args:
-        input_sequence: input seq to optimize (list[dict])
         optimizer: optimizer object (seqopt.optimizers.optimizer.OptStrategy)
         population: population keys list (list[str])
         episodes: number of episodes (int)
@@ -25,26 +33,21 @@ class OptModel:
 
     """
     def __init__(self,
-                 input_sequence,
                  optimizer,
                  population=None,
+                 max_items=None,
                  episodes=None,
                  opt_interval=1,
-                 progress=None,
-                 max_items=None
+                 progress=None
                  ):
-        self.input = input_sequence
+        # self.input = input_sequence
         self.episodes = episodes
         self.episode = 0
         self.interval = opt_interval
         self.optimizer = optimizer
         self.stopper = seqopt.callbacks.EpisodeLimit(n_episodes=self.episodes)
         self.logger = seqopt.callbacks.Logs(population)
-
-        if max_items is not None:
-            self.max_items = max_items
-        else:
-            self.max_items = len(self.input)
+        self.max_items = max_items
 
         if not progress:
             self.progress = seqopt.callbacks.Progress(patience=None, start_at=0)
