@@ -36,7 +36,7 @@ class Progress:
             episode_num = opt_eps['episode']
             if self.start_at <= episode_num and self.last_opt_eps_keys == opt_eps_keys:
                 self.n += 1
-                if self.n > self.patience:
+                if self.n >= self.patience:
                     print('reached the optimized state. Process can be ended.')
                     self.is_stagnant = True
                     if self.do_stop:
