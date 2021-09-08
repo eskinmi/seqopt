@@ -35,16 +35,15 @@ class Progress:
             opt_eps_keys = [row.get('key') for row in opt_eps['feed_out']]
             episode_num = opt_eps['episode']
             if self.start_at <= episode_num and self.last_opt_eps_keys == opt_eps_keys:
-                if self.n < self.patience:
-                    self.n += 1
-                    self.last_opt_eps_keys = opt_eps_keys
-                else:
-                    if self.verbose:
-                        print('reached the optimized state. Process can be ended.')
+                self.n += 1
+                if self.n > self.patience:
+                    print('reached the optimized state. Process can be ended.')
                     self.is_stagnant = True
                     if self.do_stop:
                         print('process will be stopped.')
                         self.stop = True
+                else:
+                    self.last_opt_eps_keys = opt_eps_keys
             else:
                 self.n = 0
                 self.last_opt_eps_keys = opt_eps_keys
