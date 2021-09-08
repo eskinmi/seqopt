@@ -91,6 +91,7 @@ class SeqOpt(process.Experiments):
         self.progress.invoke(self.logger.logs)
         if self.reset:
             self.log_and_reset()
+            return []
         else:
             self.episode += 1
-        return self.logger.logs[-1]
+            return self.logger.logs[-1]
