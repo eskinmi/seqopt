@@ -42,21 +42,24 @@ class Experiments:
 
     def __init__(self,
                  logger: Logs,
+                 episodes=None,
                  reset_at_end=True,
                  ):
         self.logger = logger
         self.reset_at_end = reset_at_end
+        self.episodes = episodes
         self.episode = 0
         self.n = 0
         self.runs = {}
 
     def add_experiment(self):
-        self.runs[self.n] = self.logger
+        self.runs[self.n] = self.logger.logs
         self.n += 1
 
     @property
     def reset(self):
-        if not self.logger.unused_items and self.reset_at_end:
+        if not self.logger.unused_items and self.reset_at_end\
+                and self.episodes is not None and self.episode >= self.episodes:
             return True
         else:
             return False
