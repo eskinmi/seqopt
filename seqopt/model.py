@@ -87,8 +87,8 @@ class SeqOpt(process.Experiments):
         if self.is_opt_episode:
             self.select_and_score()
             self.add_new()
-            self.logger.log_episode(self.episode, self.is_opt_episode)
-            self.progress.invoke(self.logger.logs)
+        self.logger.log_episode(self.episode, self.is_opt_episode)
+        self.progress.invoke(self.logger.logs)
         if self.reset:
             self.log_and_reset()
         else:
