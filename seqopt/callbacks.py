@@ -1,6 +1,3 @@
-from collections import Counter
-
-
 class EpisodeLimit:
 
     def __init__(self,
@@ -35,7 +32,7 @@ class Progress:
     def invoke(self, logs):
         if logs and self.patience is not None:
             episode_log = logs[-1]
-            episode_keys = [row.get('key') for row in episode_log['feed_opt']]
+            episode_keys = [row.get('key') for row in episode_log['feed_out']]
             episode_num = episode_log['episode']
             if self.start_at <= episode_num and self.last_episode_keys == episode_keys:
                 if self.n < self.patience:
@@ -51,26 +48,6 @@ class Progress:
             else:
                 self.n = 0
                 self.last_episode_keys = episode_keys
+        return None
 
 
-class Logs:
-
-    def __init__(self, population=None):
-        self.initial_population = population
-        self.population = self.initial_population
-        self.feeds = []
-        self.logs = []
-        self.counter = Counter()
-        self.feed = None
-        self.feed_opt = None
-
-    def log_feed(self, feed):
-        self.feeds.append(feed)
-        self.feed = feed
-        self.counter.update([i['key'] for i in feed])
-        if self.initial_population is None:
-            self.population = list(self.counter.keys())
-
-    def log_episode(self, log):
-        self.logs.append(log)
-        self.feed_opt = self.logs[-1]['feed_opt']
