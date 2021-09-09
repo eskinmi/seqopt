@@ -64,11 +64,6 @@ class Experiments:
         else:
             return False
 
-    def log_and_reset(self):
-        self.add_experiment()
-        self.logger.clear_logs()
-        self.episode = 0
-
 
 class ItemTrials:
 

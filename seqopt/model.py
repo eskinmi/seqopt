@@ -62,6 +62,12 @@ class SeqOpt(process.Experiments):
         else:
             self.progress = progress
 
+    def reset_model(self):
+        self.logger.clear_logs()
+        self.progress.reset()
+        self.stopper.reset()
+        self.episode = 0
+
     @property
     def is_opt_episode(self):
         return False if bool(self.episode % self.interval) else True
@@ -92,9 +98,8 @@ class SeqOpt(process.Experiments):
         self.logger.log_episode(self.episode, self.is_opt_episode)
         self.progress.invoke(self.logger.logs)
         if self.reset:
-            self.log_and_reset()
-            self.progress.reset()
-            self.stopper.reset()
+            self.add_experiment()
+            self.reset_model()
             return []
         else:
             self.episode += 1
