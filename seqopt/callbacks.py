@@ -6,6 +6,9 @@ class EpisodeLimit:
         self.episodes = n_episodes
         self.stop = False
 
+    def reset(self):
+        self.stop = False
+
     def invoke(self, logs):
         if self.episodes is not None and logs:
             if logs[-1]['episode'] >= self.episodes-1:
@@ -24,6 +27,12 @@ class Progress:
         self.start_at = start_at
         self.verbose = verbose
         self.do_stop = do_stop
+        self.stop = False
+        self.is_stagnant = False
+        self.n = 0
+        self.last_keys = []
+
+    def reset(self):
         self.stop = False
         self.is_stagnant = False
         self.n = 0
