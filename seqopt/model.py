@@ -67,6 +67,7 @@ class SeqOpt(process.Experiments):
         self.progress.reset()
         self.stopper.reset()
         self.episode = 0
+        self.experiment_id += 1
 
     @property
     def is_opt_episode(self):
@@ -90,6 +91,8 @@ class SeqOpt(process.Experiments):
         """
         self.stopper.invoke(self.logger.logs)
         if self.stopper.stop or self.progress.stop:
+            if self.experiment_id not in self.experiments:
+                self.add_experiment()
             return self.logger.logs[-1]
         self.logger.log_feed(feed)
         if self.is_opt_episode:

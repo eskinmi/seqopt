@@ -49,20 +49,19 @@ class Experiments:
         self.reset_at_end = reset_at_end
         self.episodes = episodes
         self.episode = 0
-        self.n = 0
-        self.runs = {}
+        self.experiment_id = 0
+        self.experiments = {}
 
     def add_experiment(self):
-        self.runs[self.n] = self.logger.logs
-        self.n += 1
+        self.experiments[self.experiment_id] = self.logger.logs
 
     @property
     def reset(self):
-        if not self.logger.unused_items and self.reset_at_end\
-                and self.episodes is not None and self.episode >= self.episodes:
-            return True
-        else:
-            return False
+        reset_now = False
+        if not self.logger.unused_items and self.reset_at_end:
+            if not self.episodes:
+                reset_now = True
+        return reset_now
 
 
 class ItemTrials:
