@@ -6,7 +6,7 @@ class ScoringStrategy:
 
     def __init__(self,
                  per_episode=True,
-                 agg_strategy='sum',
+                 agg_strategy='mean',
                  ):
         self.per_episode = per_episode
         self._acc_strategy = ['mean', 'sum', 'min', 'max']

@@ -127,7 +127,7 @@ def save(model, path):
     :param model: seqopt process.
     :param path: checkpoint location (str)
     """
-    with open(f'{path}/process', 'w') as f:
+    with open(f'{path}/seqopt', 'w') as f:
         pickle.dump(model, f)
 
 

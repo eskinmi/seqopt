@@ -13,10 +13,10 @@ def reposition(feed, by_key='reward'):
 
 def reposition_by_index(feed):
     f_repos = []
-    for ix, d in enumerate(feed):
+    for pos, d in enumerate(feed):
         d_ = d.copy()
-        d['pos'] = ix
-        f_repos.append(d)
+        d_['pos'] = pos
+        f_repos.append(d_)
     return f_repos
 
 
