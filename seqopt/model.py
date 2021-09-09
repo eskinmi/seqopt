@@ -94,7 +94,7 @@ class SeqOpt(process.Experiments):
         if self.stopper.stop or self.progress.stop:
             if self.experiment_id not in self.experiments:
                 self.add_experiment()
-            return self.logger.logs[-1]
+            return self.logger.feed_out
         self.logger.log_feed(feed)
         if self.is_opt_episode:
             self.select_and_score()
@@ -104,10 +104,10 @@ class SeqOpt(process.Experiments):
         if self.reset:
             self.add_experiment()
             self.reset_model()
-            return []
+            return None
         else:
             self.episode += 1
-            return self.logger.logs[-1]
+            return self.logger.feed_out
 
 
 def load(path):

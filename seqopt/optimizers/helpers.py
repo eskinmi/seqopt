@@ -2,11 +2,21 @@ import numpy
 import math
 
 
-def feed_reposition(feed, by_key='reward'):
+def reposition(feed, by_key='reward'):
     f_repos = []
-    for pos, i in enumerate(sorted(feed, key=lambda x: x[by_key], reverse=True)):
-        i['pos'] = pos
-        f_repos.append(i)
+    for pos, d in enumerate(sorted(feed, key=lambda x: x[by_key], reverse=True)):
+        d_ = d.copy()
+        d_['pos'] = pos
+        f_repos.append(d_)
+    return f_repos
+
+
+def reposition_by_index(feed):
+    f_repos = []
+    for ix, d in enumerate(feed):
+        d_ = d.copy()
+        d['pos'] = ix
+        f_repos.append(d)
     return f_repos
 
 

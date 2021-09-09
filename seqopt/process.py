@@ -1,5 +1,6 @@
 from collections import Counter
 import random
+from seqopt.optimizers.helpers import reposition_by_index
 
 
 def _find_indices(n, length, add_to):
@@ -23,12 +24,11 @@ def _add_keys(feed, items, indices):
     :return:
         feed added (list)
     """
-
     feed_added = feed.copy()
     items = set([item for item in items if item not in [f['key'] for f in feed_added]])
     for ix, i in enumerate(items):
-        feed_added.insert(indices[ix], {'key': i, 'reward': 0, 'pos':ix})
-    return feed_added
+        feed_added.insert(indices[ix], {'key': i, 'pos': ix, 'reward': 0})
+    return reposition_by_index(feed_added)
 
 
 class Logs:
@@ -55,7 +55,7 @@ class Logs:
                           'is_opt_episode': is_opt,
                           'feed': self.feed,
                           'feed_out': self.feed_out,
-                          'items_added' : self.items_to_try
+                          'items_added': self.items_to_try
                           })
 
     @property

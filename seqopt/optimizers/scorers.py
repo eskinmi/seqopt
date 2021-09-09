@@ -32,12 +32,12 @@ class ScoringStrategy:
              ]
             units_dict_agg = {k: self.agg_method(v) for k,v in units_dict.items()}
             agg_list = [{'key': k, 'pos': 0, 'reward': v} for k, v in units_dict_agg.items()]
-            return seqopt.optimizers.helpers.feed_reposition(agg_list, 'reward')
+            return seqopt.optimizers.helpers.reposition(agg_list, 'reward')
         else:
-            return seqopt.optimizers.helpers.feed_reposition(feeds[-1], 'reward')
+            return seqopt.optimizers.helpers.reposition(feeds[-1], 'reward')
 
     def __call__(self, logger):
-        return seqopt.optimizers.helpers.feed_reposition(
+        return seqopt.optimizers.helpers.reposition(
             self.score(
                 self.agg(logger.feeds)))
 
