@@ -1,7 +1,8 @@
-from seqopt.process import process
+from seqopt import process
 from seqopt import callbacks
 from seqopt.optimizers import scorers
 from seqopt.optimizers import selectors
+import pickle
 
 
 class SeqOpt(process.Experiments):
@@ -55,7 +56,7 @@ class SeqOpt(process.Experiments):
         self.stopper = callbacks.EpisodeLimit(n_episodes=episodes)
         self.selector = selector
         self.scorer = scorer
-        self.trials = process.ItemTrials(n=n_try, add_to=add_to)
+        self.trials = process.Trials(n=n_try, add_to=add_to)
 
         if not progress:
             self.progress = callbacks.Progress(patience=None, start_at=0)
@@ -78,8 +79,8 @@ class SeqOpt(process.Experiments):
                                                    scorers.do_score(self.scorer,
                                                                     self.logger))
 
-    def add_new(self):
-        self.logger.items_to_try, self.logger.feed_out = process.do_trial(self.trials, self.logger)
+    def add_trial_items(self):
+        self.logger.items_to_try, self.logger.feed_out = self.trials.run(self.logger)
 
     def opt(self, feed):
         """
@@ -97,7 +98,7 @@ class SeqOpt(process.Experiments):
         self.logger.log_feed(feed)
         if self.is_opt_episode:
             self.select_and_score()
-            self.add_new()
+            self.add_trial_items()
         self.logger.log_episode(self.episode, self.is_opt_episode)
         self.progress.invoke(self.logger.logs)
         if self.reset:
@@ -107,3 +108,28 @@ class SeqOpt(process.Experiments):
         else:
             self.episode += 1
             return self.logger.logs[-1]
+
+
+def load(path):
+    """
+    Load process.
+    :param path:
+    :return:
+    """
+    with open(path, 'r') as f:
+        model = pickle.load(f)
+    return model
+
+
+def save(model, path):
+    """
+    Checkpoint the process on a given episode.
+    :param model: seqopt process.
+    :param path: checkpoint location (str)
+    """
+    with open(f'{path}/process', 'w') as f:
+        pickle.dump(model, f)
+
+
+
+

@@ -1,6 +1,34 @@
 from collections import Counter
-from . import utils
 import random
+
+
+def _find_indices(n, length, add_to):
+    if add_to == 'last':
+        return tuple(length - i for i in range(n))
+    elif add_to == 'first':
+        return tuple(0 + i for i in range(n))
+    elif add_to == 'middle':
+        return tuple(round(length/2) + i for i in range(n))
+    else: # random
+        return tuple(random.randint(0, n) for i in range(n))
+
+
+def _add_keys(feed, items, indices):
+    """
+    Add keys to existing feed, in given
+        indices.
+    :param feed: feed (list)
+    :param items: items (iterable)
+    :param indices: indices to add (tuple)
+    :return:
+        feed added (list)
+    """
+
+    feed_added = feed.copy()
+    items = set([item for item in items if item not in [f['key'] for f in feed_added]])
+    for ix, i in enumerate(items):
+        feed_added.insert(indices[ix], {'key': i, 'reward': 0, 'pos':ix})
+    return feed_added
 
 
 class Logs:
@@ -64,7 +92,7 @@ class Experiments:
         return reset_now
 
 
-class ItemTrials:
+class Trials:
 
     def __init__(self, n, add_to='last'):
         self.n = n
@@ -85,7 +113,7 @@ class ItemTrials:
     def _find_n_add(self, unused_items):
         return len(unused_items) if len(unused_items) < self.n else self.n
 
-    def __call__(self, logger: Logs):
+    def run(self, logger: Logs):
         """
         Add n unused items to the feed, to
             create circular process.
@@ -95,15 +123,9 @@ class ItemTrials:
         """
         n_add = self._find_n_add(logger.unused_items)
         items = random.sample(logger.unused_items, n_add)
-        indices = utils._find_indices_from_str(n_add, length=len(logger.feed_out), add_to=self.add_to)
-        return items, utils._keys_add(logger.feed_out, items, indices)
+        indices = _find_indices(n_add, length=len(logger.feed_out), add_to=self.add_to)
+        return items, _add_keys(logger.feed_out, items, indices)
 
-
-def do_trial(item_trials: ItemTrials, logger: Logs):
-    if item_trials:
-        return item_trials(logger)
-    else:
-        return [], logger.feed_out
 
 
 
