@@ -98,7 +98,7 @@ class Trials:
     @staticmethod
     def _find_indices_to_add(n, length, add_to):
         if add_to == 'last':
-            return tuple(length - i for i in range(n))
+            return tuple(length + i for i in range(n))
         elif add_to == 'first':
             return tuple(0 + i for i in range(n))
         elif add_to == 'middle':
