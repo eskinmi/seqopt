@@ -48,7 +48,9 @@ class SeqOpt(process.Experiments):
                  reset_experiment=False
                  ):
         super().__init__(logger=process.Logs(population),
-                         reset_at_end=reset_experiment)
+                         reset_at_end=reset_experiment,
+                         episodes=episodes
+                         )
         self.interval = opt_interval
         self.stopper = callbacks.EpisodeLimit(n_episodes=episodes)
         self.selector = selector
