@@ -38,6 +38,7 @@ class SeqOpt(process.Experiments):
         progress: progress callback (seqopt.callbacks.Progress)
         reset_experiment: reset at the end of trial (bool) (default, False)
     """
+
     def __init__(self,
                  scorer=None,
                  selector=None,
@@ -76,9 +77,9 @@ class SeqOpt(process.Experiments):
         return False if bool(self.episode % self.interval) else True
 
     def select_and_score(self):
-        self.logger.feed_out = selectors.do_select(self.selector,
-                                                   scorers.do_score(self.scorer,
-                                                                    self.logger))
+        self.logger.feed_out = selectors.do_select(
+            self.selector,scorers.do_score(
+                self.scorer,self.logger))
 
     def add_trial_items(self):
         self.logger.items_to_try, self.logger.feed_out = self.trials.run(self.logger)

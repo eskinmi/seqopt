@@ -3,34 +3,6 @@ import random
 from seqopt.optimizers.helpers import reposition_by_index
 
 
-def _find_indices(n, length, add_to):
-    if add_to == 'last':
-        return tuple(length - i for i in range(n))
-    elif add_to == 'first':
-        return tuple(0 + i for i in range(n))
-    elif add_to == 'middle':
-        return tuple(round(length/2) + i for i in range(n))
-    else: # random
-        return tuple(random.randint(0, n) for i in range(n))
-
-
-def _add_keys(feed, items, indices):
-    """
-    Add keys to existing feed, in given
-        indices.
-    :param feed: feed (list)
-    :param items: items (iterable)
-    :param indices: indices to add (tuple)
-    :return:
-        feed added (list)
-    """
-    feed_added = feed.copy()
-    items = set([item for item in items if item not in [f['key'] for f in feed_added]])
-    for ix, i in enumerate(items):
-        feed_added.insert(indices[ix], {'key': i, 'pos': ix, 'reward': 0})
-    return reposition_by_index(feed_added)
-
-
 class Logs:
 
     def __init__(self, population=None):
@@ -68,11 +40,7 @@ class Logs:
 
 class Experiments:
 
-    def __init__(self,
-                 logger: Logs,
-                 episodes=None,
-                 reset_at_end=True,
-                 ):
+    def __init__(self,logger: Logs, episodes=None, reset_at_end=True):
         self.logger = logger
         self.reset_at_end = reset_at_end
         self.episodes = episodes
@@ -110,8 +78,33 @@ class Trials:
         else:
             raise ValueError(f"add_to should be one of the following : {', '.join(acceptable)}")
 
-    def _find_n_add(self, unused_items):
-        return len(unused_items) if len(unused_items) < self.n else self.n
+    @staticmethod
+    def add_keys(feed, items, indices):
+        """
+        Add keys to existing feed, in given
+            indices.
+        :param feed: feed (list)
+        :param items: items (iterable)
+        :param indices: indices to add (tuple)
+        :return:
+            feed added (list)
+        """
+        feed_added = feed.copy()
+        items = set([item for item in items if item not in [f['key'] for f in feed_added]])
+        for ix, i in enumerate(items):
+            feed_added.insert(indices[ix], {'key': i, 'pos': ix, 'reward': 0})
+        return reposition_by_index(feed_added)
+
+    @staticmethod
+    def _find_indices_to_add(n, length, add_to):
+        if add_to == 'last':
+            return tuple(length - i for i in range(n))
+        elif add_to == 'first':
+            return tuple(0 + i for i in range(n))
+        elif add_to == 'middle':
+            return tuple(round(length / 2) + i for i in range(n))
+        else:  # random
+            return tuple(random.randint(0, n) for i in range(n))
 
     def run(self, logger: Logs):
         """
@@ -121,10 +114,10 @@ class Trials:
         :return:
             feed added (list)
         """
-        n_add = self._find_n_add(logger.unused_items)
+        n_add = len(logger.unused_items) if len(logger.unused_items) < self.n else self.n
         items = random.sample(logger.unused_items, n_add)
-        indices = _find_indices(n_add, length=len(logger.feed_out), add_to=self.add_to)
-        return items, _add_keys(logger.feed_out, items, indices)
+        indices = self._find_indices_to_add(n_add, length=len(logger.feed_out), add_to=self.add_to)
+        return items, self.add_keys(logger.feed_out, items, indices)
 
 
 

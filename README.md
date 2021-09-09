@@ -29,12 +29,10 @@ seq_opt = model.SeqOpt(scorer=scorer,
                        population=population
                        ))
 
-tour=0
-while tour < len(input_feeds):
-  seq_opt.opt(input_feeds[tour])
-  tour+=1
+for feed in feeds:
+    seq_opt.opt(feed)
 
-
+seq_opt.logger.logs
 ```
 
 
