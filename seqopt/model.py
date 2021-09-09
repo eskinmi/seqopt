@@ -28,9 +28,10 @@ class SeqOpt(process.Experiments):
                 ]
 
     Args:
-        trials: (process.ItemTrials)
         scorer: (scorers.ScoringStrategy)
         selector: (selectors)
+        n_try: number of items to try per opt (int)
+        add_to: add index strategy (str)
         population: population keys list (list[str])
         episodes: number of episodes (int)
         opt_interval: episodes intervals for optimization (int)
