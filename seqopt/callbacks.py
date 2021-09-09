@@ -27,14 +27,13 @@ class Progress:
         self.stop = False
         self.is_stagnant = False
         self.n = 0
-        self.last_opt_eps_keys = []
+        self.last_keys = []
 
     def invoke(self, logs):
-        if logs and self.patience is not None:
-            opt_eps = list(filter(lambda x: x['is_opt_episode'], logs))[-1]
-            opt_eps_keys = [row.get('key') for row in opt_eps['feed_out']]
-            episode_num = opt_eps['episode']
-            if self.start_at <= episode_num and self.last_opt_eps_keys == opt_eps_keys:
+        if logs and self.patience is not None and logs[-1]['is_opt_episode']:
+            episode, episode_num = logs[-1], logs[-1]['episode']
+            cur_keys = [row.get('key') for row in episode['feed_out']]
+            if self.start_at <= episode_num and self.last_keys == cur_keys:
                 self.n += 1
                 if self.n >= self.patience:
                     print('reached the optimized state. Process can be ended.')
@@ -43,10 +42,9 @@ class Progress:
                         print('process will be stopped.')
                         self.stop = True
                 else:
-                    self.last_opt_eps_keys = opt_eps_keys
+                    self.last_keys = cur_keys
             else:
                 self.n = 0
-                self.last_opt_eps_keys = opt_eps_keys
-        return None
+                self.last_keys = cur_keys
 
 

@@ -92,8 +92,11 @@ class StandardNorm(ScoringStrategy):
         return seqopt.optimizers.helpers.feed_standard_score(feed, self.m_key)
 
 
+_default_scorer = Naive(per_episode=True)
+
+
 def do_score(scorer, logger):
     if scorer is not None:
         return scorer(logger)
     else:
-        return logger.feed
+        return _default_scorer(logger)
