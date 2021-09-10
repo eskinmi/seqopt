@@ -7,7 +7,7 @@ relative rewards (the feedback).
 The input to the model (feed) should be a list of dictionaries,
 containing `key` = name, `reward` = feedback (scalar), `pos` : position (optional).
 
-## usage
+## example use
 
 an example usage with a log normalization :
 
@@ -35,7 +35,7 @@ seq_opt.logger.logs
 ```
 
 ## modules
-### scorer
+### scorers
 `seqopt.scorer` module manages the scoring schema of feed from a given
 experiment, with out of box such as `LogNorm`, `MinMaxNorm`, or `StandardNorm`.
 
