@@ -47,7 +47,6 @@ class Experiments:
         self.episode = 0
         self.experiment_id = 0
         self.experiments = {}
-        self.output = None
 
     @property
     def output(self):
