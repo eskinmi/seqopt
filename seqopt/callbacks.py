@@ -2,16 +2,27 @@ class Progress:
     """
     Progress monitors the progress of the
     experiments and stops the process when necessary.
+    There are two stop options for the program.
+        - episode limit
+            Episode limit stops the experiments when max episode is
+            reached.
+        - early stop
+            Early stop is activated when parameter early_stop_patience
+            is given. If set to None, the experiments wont stop when it is
+            stagnant.
 
-
+        :param early_stop_patience: number of episodes to wait, before early stop(int)
+        :param early_stop_start_at: the episode to start checking early stop from (int)
     """
 
     def __init__(self,
-                 early_stop_start_at=0,
-                 early_stop_patience=2
+                 n_episodes=None,
+                 patience=None,
+                 start_at=0
                  ):
-        self.patience = early_stop_patience
-        self.start_at = early_stop_start_at
+        self.episodes = n_episodes
+        self.patience = patience
+        self.start_at = start_at
         self.stop = False
         self.is_stagnant = False
         self.n = 0

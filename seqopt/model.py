@@ -47,22 +47,18 @@ class SeqOpt(process.Experiments):
                  population=None,
                  episodes=None,
                  opt_interval=1,
-                 progress=None,
+                 early_stop_patience=None,
+                 early_stop_start_at=0,
                  reset_experiment=False
                  ):
         super().__init__(logger=process.Logs(population),
                          reset_at_end=reset_experiment,
-                         episodes=episodes
-                         )
+                         episodes=episodes)
         self.interval = opt_interval
         self.selector = selector
         self.scorer = scorer
         self.trials = process.Trials(n=n_try, add_to=add_to)
-        if not progress:
-            self.progress = callbacks.Progress(patience=None, start_at=0)
-        else:
-            self.progress = progress
-        self.progress.episodes = episodes
+        self.progress = callbacks.Progress(episodes, early_stop_patience, early_stop_start_at)
 
     @property
     def is_opt_episode(self):
