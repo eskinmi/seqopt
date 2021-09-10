@@ -80,7 +80,7 @@ class SeqOpt(process.Experiments):
             optimized sequence (list)
         """
         if self.progress.stop:
-            if self.to_restart:
+            if self.reset_at_end:
                 self.reset_experiment()
             return self.output
         self.logger.log_feed(feed)
