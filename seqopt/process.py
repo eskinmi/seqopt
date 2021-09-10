@@ -52,12 +52,18 @@ class Experiments:
         self.experiments[self.experiment_id] = self.logger.logs
 
     @property
-    def reset(self):
+    def to_reset(self):
         reset_now = False
         if not self.logger.unused_items and self.reset_at_end:
             if not self.episodes:
                 reset_now = True
         return reset_now
+
+    def reset_experiment(self):
+        self.add_experiment()
+        self.logger.clear_logs()
+        self.episode = 0
+        self.experiment_id += 1
 
 
 class Trials:

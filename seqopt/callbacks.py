@@ -1,28 +1,13 @@
-class EpisodeLimit:
-
-    def __init__(self,
-                 n_episodes,
-                 ):
-        self.episodes = n_episodes
-        self.stop = False
-
-    def reset(self):
-        self.stop = False
-
-    def invoke(self, logs):
-        if self.episodes is not None and logs:
-            if logs[-1]['episode'] >= self.episodes-1:
-                self.stop = True
-
-
 class Progress:
 
     def __init__(self,
+                 n_episodes,
                  patience=2,
                  start_at=0,
                  verbose=True,
                  do_stop=False
                  ):
+        self.episodes = n_episodes
         self.patience = patience
         self.start_at = start_at
         self.verbose = verbose
@@ -38,7 +23,7 @@ class Progress:
         self.n = 0
         self.last_keys = []
 
-    def invoke(self, logs):
+    def early_stop(self, logs):
         if logs and self.patience is not None and logs[-1]['is_opt_episode']:
             episode, episode_num = logs[-1], logs[-1]['episode']
             cur_keys = [row.get('key') for row in episode['feed_out']]
@@ -55,5 +40,16 @@ class Progress:
             else:
                 self.n = 0
                 self.last_keys = cur_keys
+
+    def episode_stopper(self, logs):
+        if self.episodes is not None and logs:
+            if logs[-1]['episode'] >= self.episodes - 1:
+                self.stop = True
+
+    def invoke(self):
+        self.episode_stopper()
+        self.early_stop()
+
+
 
 

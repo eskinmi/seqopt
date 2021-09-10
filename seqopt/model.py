@@ -55,31 +55,18 @@ class SeqOpt(process.Experiments):
                          episodes=episodes
                          )
         self.interval = opt_interval
-        self.stopper = callbacks.EpisodeLimit(n_episodes=episodes)
         self.selector = selector
         self.scorer = scorer
         self.trials = process.Trials(n=n_try, add_to=add_to)
 
         if not progress:
-            self.progress = callbacks.Progress(patience=None, start_at=0)
+            self.progress = callbacks.Progress(n_episodes=episodes, patience=None, start_at=0)
         else:
             self.progress = progress
-
-    def reset_model(self):
-        self.logger.clear_logs()
-        self.progress.reset()
-        self.stopper.reset()
-        self.episode = 0
-        self.experiment_id += 1
 
     @property
     def is_opt_episode(self):
         return False if bool(self.episode % self.interval) else True
-
-    def select_and_score(self):
-        self.logger.feed_out = selectors.do_select(
-            self.selector,scorers.do_score(
-                self.scorer,self.logger))
 
     def add_trial_items(self):
         self.logger.items_to_try, self.logger.feed_out = self.trials.run(self.logger)
@@ -93,19 +80,21 @@ class SeqOpt(process.Experiments):
             optimized sequence (list)
         """
         self.stopper.invoke(self.logger.logs)
-        if self.stopper.stop or self.progress.stop:
+        if self.progress.stop:
             if self.experiment_id not in self.experiments:
                 self.add_experiment()
             return self.logger.feed_out
         self.logger.log_feed(feed)
         if self.is_opt_episode:
-            self.select_and_score()
+            self.logger.feed_out = selectors.do_select(
+                self.selector, scorers.do_score(
+                    self.scorer, self.logger))
             self.add_trial_items()
         self.logger.log_episode(self.episode, self.is_opt_episode)
         self.progress.invoke(self.logger.logs)
-        if self.reset:
-            self.add_experiment()
-            self.reset_model()
+        if self.to_reset:
+            self.reset_experiment()
+            self.progress.reset()
             return None
         else:
             self.episode += 1
