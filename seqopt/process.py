@@ -40,7 +40,7 @@ class Logs:
 
 class Experiments:
 
-    def __init__(self,logger: Logs, episodes=None, reset_at_end=True):
+    def __init__(self, logger: Logs, episodes=None, reset_at_end=True):
         self.logger = logger
         self.reset_at_end = reset_at_end
         self.episodes = episodes
@@ -78,7 +78,10 @@ class Trials:
 
     def __init__(self, n, add_to='last'):
         self.n = n
-        self.add_to = add_to
+        if add_to is None:
+            self.add_to = 'last'
+        else:
+            self.add_to = add_to
 
     @property
     def add_to(self):

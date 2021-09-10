@@ -1,15 +1,17 @@
 class Progress:
+    """
+    Progress monitors the progress of the
+    experiments and stops the process when necessary.
+
+
+    """
 
     def __init__(self,
-                 patience=2,
-                 start_at=0,
-                 verbose=True,
-                 do_stop=False,
+                 early_stop_start_at=0,
+                 early_stop_patience=2
                  ):
-        self.patience = patience
-        self.start_at = start_at
-        self.verbose = verbose
-        self.do_stop = do_stop
+        self.patience = early_stop_patience
+        self.start_at = early_stop_start_at
         self.stop = False
         self.is_stagnant = False
         self.n = 0
@@ -28,11 +30,10 @@ class Progress:
             if self.start_at <= episode_num and self.last_keys == cur_keys:
                 self.n += 1
                 if self.n >= self.patience:
-                    print('reached the optimized state. Process can be ended.')
+                    print('reached the optimized state, process can be ended.')
                     self.is_stagnant = True
-                    if self.do_stop:
-                        print('process will be stopped.')
-                        self.stop = True
+                    print('process will be stopped.')
+                    self.stop = True
                 else:
                     self.last_keys = cur_keys
             else:
@@ -42,6 +43,7 @@ class Progress:
     def episode_stopper(self, logs):
         if self.episodes is not None and logs:
             if logs[-1]['episode'] >= self.episodes-1:
+                print('reached end of episodes for this experiment')
                 self.stop = True
 
     def invoke(self, logs):
