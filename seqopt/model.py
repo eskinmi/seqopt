@@ -80,9 +80,9 @@ class SeqOpt(process.Experiments):
             optimized sequence (list)
         """
         if self.progress.stop:
-            if self.reset_at_end:
+            if self.to_restart:
                 self.reset_experiment()
-            return None
+            return self.output
         self.logger.log_feed(feed)
         if self.is_opt_episode:
             self.logger.feed_out = selectors.do_select(
@@ -91,13 +91,13 @@ class SeqOpt(process.Experiments):
             self.add_trial_items()
         self.logger.log_episode(self.episode, self.is_opt_episode)
         self.progress.invoke(self.logger.logs)
-        if self.to_reset:
+        if self.to_restart:
             self.reset_experiment()
             self.progress.reset()
-            return None
+            return self.output
         else:
             self.episode += 1
-            return None
+            return self.output
 
 
 def load(path):

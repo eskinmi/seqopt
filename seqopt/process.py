@@ -51,15 +51,16 @@ class Experiments:
     @property
     def output(self):
         if self.experiments:
-            return self.experiments.get(max(self.experiments))[-1]['feed_out']
+            return self.experiments.get(max(self.experiments))[-1].get('feed_out')
         else:
             return self.logger.logs[-1]['feed_out']
 
     def add_experiment(self):
-        self.experiments[self.experiment_id] = self.logger.logs
+        if self.logger.logs:
+            self.experiments[self.experiment_id] = self.logger.logs
 
     @property
-    def to_reset(self):
+    def to_restart(self):
         if not self.logger.unused_items and self.reset_at_end\
                 and not self.episodes:
             return True
