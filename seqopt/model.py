@@ -79,7 +79,6 @@ class SeqOpt(process.Experiments):
         :return:
             optimized sequence (list)
         """
-        self.stopper.invoke(self.logger.logs)
         if self.progress.stop:
             if self.experiment_id not in self.experiments:
                 self.add_experiment()

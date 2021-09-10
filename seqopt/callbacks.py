@@ -43,7 +43,7 @@ class Progress:
 
     def episode_stopper(self, logs):
         if self.episodes is not None and logs:
-            if logs[-1]['episode'] >= self.episodes - 1:
+            if logs[-1]['episode'] >= self.episodes:
                 self.stop = True
 
     def invoke(self):
