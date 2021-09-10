@@ -82,7 +82,9 @@ class SeqOpt(process.Experiments):
         if self.progress.stop:
             if self.reset_at_end:
                 self.reset_experiment()
-            return self.output
+                self.progress.reset()
+            else:
+                return self.output
         self.logger.log_feed(feed)
         if self.is_opt_episode:
             self.logger.feed_out = selectors.do_select(
