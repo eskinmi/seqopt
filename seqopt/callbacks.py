@@ -1,13 +1,11 @@
 class Progress:
 
     def __init__(self,
-                 n_episodes,
                  patience=2,
                  start_at=0,
                  verbose=True,
-                 do_stop=False
+                 do_stop=False,
                  ):
-        self.episodes = n_episodes
         self.patience = patience
         self.start_at = start_at
         self.verbose = verbose
@@ -46,9 +44,9 @@ class Progress:
             if logs[-1]['episode'] >= self.episodes:
                 self.stop = True
 
-    def invoke(self):
-        self.episode_stopper()
-        self.early_stop()
+    def invoke(self, logs):
+        self.episode_stopper(logs)
+        self.early_stop(logs)
 
 
 

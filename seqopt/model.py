@@ -58,11 +58,11 @@ class SeqOpt(process.Experiments):
         self.selector = selector
         self.scorer = scorer
         self.trials = process.Trials(n=n_try, add_to=add_to)
-
         if not progress:
-            self.progress = callbacks.Progress(n_episodes=episodes, patience=None, start_at=0)
+            self.progress = callbacks.Progress(patience=None, start_at=0)
         else:
             self.progress = progress
+        self.progress.episodes = episodes
 
     @property
     def is_opt_episode(self):
