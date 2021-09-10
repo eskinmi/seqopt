@@ -8,7 +8,6 @@ The input to the model (feed) should be a list of dictionaries,
 containing `key` = name, `reward` = feedback (scalar), `pos` : position (optional).
 
 ## usage
-===
 
 an example usage with a log normalization :
 
@@ -34,6 +33,33 @@ for feed in feeds:
 
 seq_opt.logger.logs
 ```
+
+## modules
+### scorer
+`seqopt.scorer` module manages the scoring schema of feed from a given
+experiment, with out of box such as `LogNorm`, `MinMaxNorm`, or `StandardNorm`.
+
+The `ScoringStrategy` object allows users to use make their own scorers.  
+In order to write a custom scorer, one can use the following approach:
+
+```py
+class CustomScorer(ScoringStrategy):
+
+    def __init__(self,
+                 per_episode=True,
+                 agg_strategy='sum'
+                 ):
+        super().__init__(per_episode, agg_strategy)
+
+    def score(self, feed):
+        #scoring operation
+        return feed_scored
+```
+
+### selectors
+selectors manage the selecting schema for every optimization round. Currrently,
+the package has two out of box selectors, `TopN` and `MaxRelative`.
+
 
 
 
