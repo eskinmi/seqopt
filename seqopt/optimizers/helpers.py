@@ -33,7 +33,7 @@ def feed_min_max_norm(feed, name):
     max_ = max(feed, key=lambda x: x['reward'])['reward']
     min_ = min(feed, key=lambda x: x['reward'])['reward']
     for i in feed:
-        i[name] = (i['reward'] - min_) / (max_ - min_)
+        i[name] = round((i['reward'] - min_) / (max_ - min_), 5)
         metrics.append(i)
     return metrics
 
@@ -41,7 +41,7 @@ def feed_min_max_norm(feed, name):
 def feed_log_norm(feed, log_base, name):
     metrics = []
     for i in feed:
-        i[name] = math.log(i['reward']+1, log_base)
+        i[name] = round(math.log(i['reward']+1, log_base), 5)
         metrics.append(i)
     return metrics
 
@@ -51,6 +51,6 @@ def feed_standard_score(feeds, name):
     avg_ = numpy.mean([i['reward'] for i in feeds])
     std_ = numpy.std([i['reward'] for i in feeds])
     for i in feeds:
-        i[name] = (i['reward'] - avg_) / std_
+        i[name] = round((i['reward'] - avg_) / std_, 5)
         metrics.append(i)
     return metrics

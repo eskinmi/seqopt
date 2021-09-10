@@ -80,9 +80,9 @@ class SeqOpt(process.Experiments):
             optimized sequence (list)
         """
         if self.progress.stop:
-            if self.experiment_id not in self.experiments:
-                self.add_experiment()
-            return self.logger.feed_out
+            if self.reset_at_end:
+                self.reset_experiment()
+            return None
         self.logger.log_feed(feed)
         if self.is_opt_episode:
             self.logger.feed_out = selectors.do_select(
@@ -97,7 +97,7 @@ class SeqOpt(process.Experiments):
             return None
         else:
             self.episode += 1
-            return self.logger.feed_out
+            return None
 
 
 def load(path):
