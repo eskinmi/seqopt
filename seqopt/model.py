@@ -67,6 +67,23 @@ class SeqOpt(process.Experiments):
     def add_trial_items(self):
         self.logger.items_to_try, self.logger.feed_out = self.trials.run(self.logger)
 
+    def pipe(self, feed):
+        self.logger.log_feed(feed)
+        if self.is_opt_episode:
+            self.logger.feed_out = selectors.do_select(
+                self.selector, scorers.do_score(
+                    self.scorer, self.logger))
+            self.add_trial_items()
+        self.logger.log_episode(self.episode, self.is_opt_episode)
+        self.progress.invoke(self.logger.logs)
+        if self.to_restart:
+            self.reset_experiment()
+            self.progress.reset()
+            return self.optimized_seq
+        else:
+            self.episode += 1
+            return self.optimized_seq
+
     def opt(self, feed):
         """
         Optimize the sequence with number of input
@@ -79,24 +96,11 @@ class SeqOpt(process.Experiments):
             if self.reset_at_end:
                 self.reset_experiment()
                 self.progress.reset()
+                self.pipe(feed)
             else:
                 return self.optimized_seq
         else:
-            self.logger.log_feed(feed)
-            if self.is_opt_episode:
-                self.logger.feed_out = selectors.do_select(
-                    self.selector, scorers.do_score(
-                        self.scorer, self.logger))
-                self.add_trial_items()
-            self.logger.log_episode(self.episode, self.is_opt_episode)
-            self.progress.invoke(self.logger.logs)
-            if self.to_restart:
-                self.reset_experiment()
-                self.progress.reset()
-                return self.optimized_seq
-            else:
-                self.episode += 1
-                return self.optimized_seq
+            return self.pipe(feed)
 
 
 def load(path):
