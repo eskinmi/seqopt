@@ -31,6 +31,7 @@ seq_opt = model.SeqOpt(scorer=scr,
 for feed in input_feeds:
   seq_opt.opt(feed)
   
+print(seq_opt.optimized_seq)
 print(seq_opt.experiments)
 print(seq_opt.logger.logs)
 ```
