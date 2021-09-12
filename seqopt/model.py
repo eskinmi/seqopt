@@ -62,12 +62,24 @@ class SeqOpt(process.Experiments):
 
     @property
     def is_opt_episode(self):
+        """
+        Finds if the current episode is
+        optimization episode.
+        :return:
+            bool
+        """
         return False if bool(self.episode % self.interval) else True
 
     def add_trial_items(self):
         self.logger.items_to_try, self.logger.feed_out = self.trials.run(self.logger)
 
     def pipe(self, feed):
+        """
+        Optimization pipeline for a new feed.
+        :param feed: feed (list[dict])
+        :return:
+            self.optimized_seq
+        """
         self.logger.log_feed(feed)
         if self.is_opt_episode:
             self.logger.feed_out = selectors.do_select(
