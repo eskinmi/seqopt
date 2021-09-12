@@ -81,28 +81,30 @@ class SeqOpt(process.Experiments):
                 self.progress.reset()
             else:
                 return self.optimized_seq
-        self.logger.log_feed(feed)
-        if self.is_opt_episode:
-            self.logger.feed_out = selectors.do_select(
-                self.selector, scorers.do_score(
-                    self.scorer, self.logger))
-            self.add_trial_items()
-        self.logger.log_episode(self.episode, self.is_opt_episode)
-        self.progress.invoke(self.logger.logs)
-        if self.to_restart:
-            self.reset_experiment()
-            self.progress.reset()
-            return self.optimized_seq
         else:
-            self.episode += 1
-            return self.optimized_seq
+            self.logger.log_feed(feed)
+            if self.is_opt_episode:
+                self.logger.feed_out = selectors.do_select(
+                    self.selector, scorers.do_score(
+                        self.scorer, self.logger))
+                self.add_trial_items()
+            self.logger.log_episode(self.episode, self.is_opt_episode)
+            self.progress.invoke(self.logger.logs)
+            if self.to_restart:
+                self.reset_experiment()
+                self.progress.reset()
+                return self.optimized_seq
+            else:
+                self.episode += 1
+                return self.optimized_seq
 
 
 def load(path):
     """
     Load process.
-    :param path:
+    :param path: path (str)
     :return:
+        seqopt.model
     """
     with open(path, 'r') as f:
         model = pickle.load(f)
@@ -112,7 +114,7 @@ def load(path):
 def save(model, path):
     """
     Checkpoint the process on a given episode.
-    :param model: seqopt process.
+    :param model: seqopt.model
     :param path: checkpoint location (str)
     """
     with open(f'{path}/seqopt', 'w') as f:
