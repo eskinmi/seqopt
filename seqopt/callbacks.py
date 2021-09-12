@@ -11,8 +11,9 @@ class Progress:
             is given. If set to None, the experiments wont stop when it is
             stagnant.
 
-        :param early_stop_patience: number of episodes to wait, before early stop(int)
-        :param early_stop_start_at: the episode to start checking early stop from (int)
+        :param patience: number of episodes to wait, before early stop(int)
+        :param start_at: the episode to start checking early stop from (int)
+        ;param n_episodes: number of episodes (int)
     """
 
     def __init__(self,
@@ -42,8 +43,8 @@ class Progress:
                 self.n += 1
                 if self.n >= self.patience:
                     print('reached the optimized state, process can be ended.')
-                    self.is_stagnant = True
                     print('process will be stopped.')
+                    self.is_stagnant = True
                     self.stop = True
                 else:
                     self.last_keys = cur_keys

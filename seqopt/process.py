@@ -13,7 +13,7 @@ class Logs:
         self.counter = Counter()
         self.feed = None
         self.feed_out = None
-        self.items_to_try=None
+        self.items_to_try = None
 
     def log_feed(self, feed):
         self.feeds.append(feed)
@@ -49,7 +49,7 @@ class Experiments:
         self.experiments = {}
 
     @property
-    def output(self):
+    def optimized_seq(self):
         if self.experiments:
             return self.experiments.get(max(self.experiments))[-1].get('feed_out')
         else:
