@@ -19,6 +19,16 @@ class TopN:
         return feed[:self.n]
 
 
+class AbsoluteThreshold:
+
+    def __init__(self, threshold, key='score'):
+        self.threshold = threshold
+        self.key = key
+
+    def __call__(self, feed):
+        return list(filter(lambda x: x[self.key] >= self.threshold, feed))
+
+
 def do_select(selector, feed):
     if selector is not None:
         return selector(feed)

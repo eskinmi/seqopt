@@ -1,15 +1,25 @@
 # seqopt
 
 This package helps solve naive sequence optimization problems,
-that includes sorting and selecting a population of keys with their
+that includes sorting and selecting, trying a population of keys with their
 relative rewards (the feedback).
+This model can be used for recursive optimization problems where the output is the  
+input to a system for the new iteration, from which the new rewards are collected.
 
-The input to the model (feed) should be a list of dictionaries,
-containing `key` = name, `reward` = feedback (scalar), `pos` : position (optional).
+
+## terminology
+
+`Experiment` : An experiment is a complete trial cycle, where all the keys in the  
+population is tried and feedback is collected. Experiments are looged at the end  
+of the experiments in `seqopt.model.experiment`. Experiment logs are collected in
+`seqopt.model.logger` object.
+
 
 ## example use
 
-an example usage with a log normalization :
+The input to the model (feed) should be a list of dictionaries,
+containing `key` = name, `reward` = feedback (scalar), `pos` : position (optional).
+An example usage with a min max normalization :
 
 ```py
 
