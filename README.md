@@ -11,7 +11,7 @@ input to a system for the new iteration, from which the new rewards are collecte
 
 `Experiment` : An experiment is a complete trial cycle, where all the keys in the  
 population is tried and feedback is collected. Experiments are looged at the end  
-of the experiments in `seqopt.model.experiment`. Experiment logs are collected in
+of the experiments in `seqopt.model.experiments`. Experiment logs are collected in
 `seqopt.model.logger` object.
 
 
