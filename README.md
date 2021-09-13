@@ -69,7 +69,7 @@ class CustomScorer(ScoringStrategy):
 ```
 
 ### selectors
-selectors manage the selecting schema for every optimization round. Currrently,
+selectors manage the selecting schema for every optimization round. Currently,
 the package has two out of box selectors, `TopN` and `MaxRelative`.
 
 
