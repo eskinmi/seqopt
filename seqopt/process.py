@@ -121,7 +121,7 @@ class Trials:
         elif add_to == 'middle':
             return tuple(round(length / 2) + i for i in range(n))
         else:  # random
-            return tuple(random.randint(0, n) for i in range(n))
+            return tuple(random.randint(0, n) for _ in range(n))
 
     def run(self, logger: Logs):
         """

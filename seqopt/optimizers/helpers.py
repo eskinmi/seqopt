@@ -22,9 +22,10 @@ def reposition_by_index(feed):
 
 def feed_naive(feed, name):
     metrics = []
-    for i in feed:
-        i[name] = i['reward']
-        metrics.append(i)
+    for d in feed:
+        d_ = d.copy()
+        d_[name] = d['reward']
+        metrics.append(d_)
     return metrics
 
 

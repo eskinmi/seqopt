@@ -3,7 +3,11 @@ import numpy
 
 
 class ScoringStrategy:
-
+    """
+    Scoring main class with aggregation strategies, and main score functions call.
+        :param per_episode: score per episode (bool)
+        :param agg_strategy: aggregation func (str)
+    """
     def __init__(self,
                  per_episode=True,
                  agg_strategy='mean',
@@ -43,7 +47,12 @@ class ScoringStrategy:
 
 
 class Naive(ScoringStrategy):
-
+    """
+    Naive scorer.
+        score = reward.
+    :return:
+        list[dict] with new key (score).
+    """
     def __init__(self,
                  per_episode=True,
                  agg_strategy='sum'
@@ -55,7 +64,12 @@ class Naive(ScoringStrategy):
 
 
 class MinMaxNorm(ScoringStrategy):
-
+    """
+        Min Max Normalizer.
+        score = min_max_norm(feed).
+        :return:
+            list[dict] with new key (score).
+        """
     def __init__(self,
                  per_episode=True,
                  agg_strategy='sum'
@@ -67,7 +81,13 @@ class MinMaxNorm(ScoringStrategy):
 
 
 class LogNorm(ScoringStrategy):
-
+    """
+        Log normalizer.
+        score = log_norm(feed)
+            :param log_base: log base (int/float)
+        :return:
+            list[dict] with new key (score).
+        """
     def __init__(self,
                  log_base=10,
                  per_episode=True,
@@ -81,7 +101,12 @@ class LogNorm(ScoringStrategy):
 
 
 class StandardNorm(ScoringStrategy):
-
+    """
+        Standard normalizer.
+        score = standard_norm(feed).
+        :return:
+            list[dict] with new key (score).
+        """
     def __init__(self,
                  per_episode=True,
                  agg_strategy='sum'

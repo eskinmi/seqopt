@@ -61,7 +61,7 @@ class SeqOpt(process.Experiments):
         self.progress = callbacks.Progress(episodes, early_stop_patience, early_stop_start_at)
 
     @property
-    def is_opt_episode(self):
+    def _is_opt_episode(self):
         """
         Finds if the current episode is
         optimization episode.
@@ -70,10 +70,10 @@ class SeqOpt(process.Experiments):
         """
         return False if bool(self.episode % self.interval) else True
 
-    def add_trial_items(self):
+    def _add_trial_items(self):
         self.logger.items_to_try, self.logger.feed_out = self.trials.run(self.logger)
 
-    def pipe(self, feed):
+    def _opt_round(self, feed):
         """
         Optimization pipeline for a new feed.
         :param feed: feed (list[dict])
@@ -81,12 +81,12 @@ class SeqOpt(process.Experiments):
             self.optimized_seq
         """
         self.logger.log_feed(feed)
-        if self.is_opt_episode:
+        if self._is_opt_episode:
             self.logger.feed_out = selectors.do_select(
                 self.selector, scorers.do_score(
                     self.scorer, self.logger))
-            self.add_trial_items()
-        self.logger.log_episode(self.episode, self.is_opt_episode)
+            self._add_trial_items()
+        self.logger.log_episode(self.episode, self._is_opt_episode)
         self.progress.invoke(self.logger.logs)
         if self.to_restart:
             self.reset_experiment()
@@ -108,11 +108,11 @@ class SeqOpt(process.Experiments):
             if self.reset_at_end:
                 self.reset_experiment()
                 self.progress.reset()
-                self.pipe(feed)
+                self._opt_round(feed)
             else:
                 return self.optimized_seq
         else:
-            return self.pipe(feed)
+            return self._opt_round(feed)
 
 
 def load(path):

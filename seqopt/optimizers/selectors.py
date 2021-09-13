@@ -1,3 +1,4 @@
+
 class MaxRelative:
 
     def __init__(self, cutoff_ratio, key='score'):
