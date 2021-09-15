@@ -34,14 +34,20 @@ class Logs:
     def unused_items(self):
         return [item for item in self.population if item not in self.counter.keys()]
 
-    def clear_logs(self):
-        self.__init__(self.initial_population)
+    def reset_logs(self):
+        self.population = self.initial_population
+        self.feeds = []
+        self.logs = []
+        self.counter = Counter()
+        self.feed = None
+        self.feed_out = None
+        self.items_to_try = None
 
 
-class Experiments:
+class Experiments(Logs):
 
-    def __init__(self, logger: Logs):
-        self.logger = logger
+    def __init__(self, population):
+        super().__init__(population=population)
         self.episode = 0
         self.experiment_id = 0
         self.experiments = {}
@@ -51,15 +57,15 @@ class Experiments:
         if self.experiments:
             return self.experiments.get(max(self.experiments))[-1].get('feed_out')
         else:
-            return self.logger.logs[-1]['feed_out']
+            return self.logs[-1]['feed_out']
 
     def add_experiment(self):
-        if self.logger.logs:
-            self.experiments[self.experiment_id] = self.logger.logs
+        if self.logs:
+            self.experiments[self.experiment_id] = self.logs
 
     def reset_experiment(self):
         self.add_experiment()
-        self.logger.clear_logs()
+        self.reset_logs()
         self.episode = 0
         self.experiment_id += 1
 
@@ -113,18 +119,19 @@ class Trials:
         else:  # random
             return tuple(random.randint(0, n) for _ in range(n))
 
-    def run(self, logger: Logs):
+    def run(self, feed_out, unused_items):
         """
         Add n unused items to the feed, to
             create circular process.
-        :param logger: seqopt.callbacks.Logs object
+        :param feed_out: experiments.feed_out
+        :param unused_items: experiments.unused_items
         :return:
             feed added (list)
         """
-        n_add = len(logger.unused_items) if len(logger.unused_items) < self.n else self.n
-        items = random.sample(logger.unused_items, n_add)
-        indices = self._find_indices_to_add(n_add, length=len(logger.feed_out), add_to=self.add_to)
-        return items, self.add_keys(logger.feed_out, items, indices)
+        n_add = len(unused_items) if len(unused_items) < self.n else self.n
+        items = random.sample(unused_items, n_add)
+        indices = self._find_indices_to_add(n_add, length=len(feed_out), add_to=self.add_to)
+        return items, self.add_keys(feed_out, items, indices)
 
 
 

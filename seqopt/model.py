@@ -51,7 +51,7 @@ class SeqOpt(process.Experiments):
                  early_stop_start_at=0,
                  reset_experiment=False
                  ):
-        super().__init__(logger=process.Logs(population))
+        super().__init__(population=population)
         self.interval = opt_interval
         self.selector = selector
         self.scorer = scorer
@@ -72,20 +72,19 @@ class SeqOpt(process.Experiments):
         return False if bool(self.episode % self.interval) else True
 
     def _add_trial_items(self):
-        self.logger.items_to_try, self.logger.feed_out = self.trials.run(self.logger)
+        self.items_to_try, self.feed_out = self.trials.run(self.feed_out, self.unused_items)
 
     def _run_opt_episode(self, feed):
-        self.logger.log_feed(feed)
+        self.log_feed(feed)
         if self._is_opt_episode:
-            self.logger.feed_out = selectors.do_select(
-                self.selector, scorers.do_score(
-                    self.scorer, self.logger))
+            self.feed_out = selectors.do_select(
+                self.selector, scorers.do_score(self.scorer, self.feeds))
             self._add_trial_items()
-        self.logger.log_episode(self.episode, self._is_opt_episode)
+        self.log_episode(self.episode, self._is_opt_episode)
         self.episode += 1
 
     def opt(self, feed):
-        self.progress.invoke(self.logger)
+        self.progress.invoke(self.logs, self.unused_items, self.initial_population)
         if self.progress.restart:
             self.reset_experiment()
             self.progress.reset()

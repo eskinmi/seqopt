@@ -69,11 +69,11 @@ class Progress:
             if not unused_items and initial_population:
                 self.restart = True
 
-    def invoke(self, logger):
-        self.is_end_of_episode(logger.logs)
-        self.is_to_early_stop(logger.logs)
-        if logger.logs:
-            self.is_to_restart(logger.unused_items, logger.initial_population)
+    def invoke(self, logs, unused_items, initial_population):
+        self.is_end_of_episode(logs)
+        self.is_to_early_stop(logs)
+        if logs:
+            self.is_to_restart(unused_items, initial_population)
 
 
 

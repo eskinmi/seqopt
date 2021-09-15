@@ -40,10 +40,8 @@ class ScoringStrategy:
         else:
             return seqopt.optimizers.helpers.reposition(feeds[-1], 'reward')
 
-    def __call__(self, logger):
-        return seqopt.optimizers.helpers.reposition(
-            self.score(
-                self.agg(logger.feeds)))
+    def __call__(self, feeds):
+        return seqopt.optimizers.helpers.reposition(self.score(self.agg(feeds)))
 
 
 class Naive(ScoringStrategy):
