@@ -62,18 +62,18 @@ class Progress:
                 print('reached end of episodes for this experiment')
                 self.stop = True
 
-    def is_to_restart(self, unused_items, population):
+    def is_to_restart(self, unused_items, initial_population):
         if self.restart_at_end:
             if self.stop:
                 self.restart = True
-            if not unused_items and not population:
+            if not unused_items and initial_population:
                 self.restart = True
 
     def invoke(self, logger):
         self.is_end_of_episode(logger.logs)
         self.is_to_early_stop(logger.logs)
         if logger.logs:
-            self.is_to_restart(logger.unused_items, logger.population)
+            self.is_to_restart(logger.unused_items, logger.initial_population)
 
 
 
