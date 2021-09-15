@@ -51,14 +51,15 @@ class SeqOpt(process.Experiments):
                  early_stop_start_at=0,
                  reset_experiment=False
                  ):
-        super().__init__(logger=process.Logs(population),
-                         reset_at_end=reset_experiment,
-                         episodes=episodes)
+        super().__init__(logger=process.Logs(population))
         self.interval = opt_interval
         self.selector = selector
         self.scorer = scorer
         self.trials = process.Trials(n=n_try, add_to=add_to)
-        self.progress = callbacks.Progress(episodes, early_stop_patience, early_stop_start_at)
+        self.progress = callbacks.Progress(n_episodes=episodes,
+                                           patience=early_stop_patience,
+                                           start_at=early_stop_start_at,
+                                           restart=reset_experiment)
 
     @property
     def _is_opt_episode(self):
@@ -73,13 +74,7 @@ class SeqOpt(process.Experiments):
     def _add_trial_items(self):
         self.logger.items_to_try, self.logger.feed_out = self.trials.run(self.logger)
 
-    def _opt_round(self, feed):
-        """
-        Optimization pipeline for a new feed.
-        :param feed: feed (list[dict])
-        :return:
-            self.optimized_seq
-        """
+    def _run_opt_episode(self, feed):
         self.logger.log_feed(feed)
         if self._is_opt_episode:
             self.logger.feed_out = selectors.do_select(
@@ -87,32 +82,59 @@ class SeqOpt(process.Experiments):
                     self.scorer, self.logger))
             self._add_trial_items()
         self.logger.log_episode(self.episode, self._is_opt_episode)
-        self.progress.invoke(self.logger.logs)
-        if self.to_restart:
-            self.reset_experiment()
-            self.progress.reset()
-            return self.optimized_seq
-        else:
-            self.episode += 1
-            return self.optimized_seq
 
     def opt(self, feed):
-        """
-        Optimize the sequence with number of input
-            given overtime.
-        :param feed: feedback (list)
-        :return:
-            optimized sequence (list)
-        """
-        if self.progress.stop:
-            if self.reset_at_end:
-                self.reset_experiment()
-                self.progress.reset()
-                self._opt_round(feed)
-            else:
-                return self.optimized_seq
+        self.progress.invoke(self.logger.logs)
+        if self.progress.restart:
+            self.reset_experiment()
+            self.progress.reset()
+            self._run_opt_episode(feed)
+        elif self.progress.stop:
+            self.reset_experiment()
         else:
-            return self._opt_round(feed)
+            self._run_opt_episode(feed)
+            self.episode += 1
+
+    # def _opt_round(self, feed):
+    #     """
+    #     Optimization pipeline for a new feed.
+    #     :param feed: feed (list[dict])
+    #     :return:
+    #         self.optimized_seq
+    #     """
+    #     self.logger.log_feed(feed)
+    #     if self._is_opt_episode:
+    #         self.logger.feed_out = selectors.do_select(
+    #             self.selector, scorers.do_score(
+    #                 self.scorer, self.logger))
+    #         self._add_trial_items()
+    #     self.logger.log_episode(self.episode, self._is_opt_episode)
+    #     self.progress.invoke(self.logger.logs)
+    #     if self.to_restart:
+    #         self.reset_experiment()
+    #         self.progress.reset()
+    #         return self.optimized_seq
+    #     else:
+    #         self.episode += 1
+    #         return self.optimized_seq
+    #
+    # def opt(self, feed):
+    #     """
+    #     Optimize the sequence with number of input
+    #         given overtime.
+    #     :param feed: feedback (list)
+    #     :return:
+    #         optimized sequence (list)
+    #     """
+    #     if self.progress.stop:
+    #         if self.reset_at_end:
+    #             self.reset_experiment()
+    #             self.progress.reset()
+    #             self._opt_round(feed)
+    #         else:
+    #             return self.optimized_seq
+    #     else:
+    #         return self._opt_round(feed)
 
 
 def load(path):

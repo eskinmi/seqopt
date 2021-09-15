@@ -40,10 +40,8 @@ class Logs:
 
 class Experiments:
 
-    def __init__(self, logger: Logs, episodes=None, reset_at_end=True):
+    def __init__(self, logger: Logs):
         self.logger = logger
-        self.reset_at_end = reset_at_end
-        self.episodes = episodes
         self.episode = 0
         self.experiment_id = 0
         self.experiments = {}
@@ -58,14 +56,6 @@ class Experiments:
     def add_experiment(self):
         if self.logger.logs:
             self.experiments[self.experiment_id] = self.logger.logs
-
-    @property
-    def to_restart(self):
-        if not self.logger.unused_items and self.reset_at_end\
-                and not self.episodes:
-            return True
-        else:
-            return False
 
     def reset_experiment(self):
         self.add_experiment()

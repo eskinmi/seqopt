@@ -17,25 +17,29 @@ class Progress:
     """
 
     def __init__(self,
-                 n_episodes=None,
-                 patience=None,
-                 start_at=0
+                 n_episodes,
+                 patience,
+                 start_at,
+                 restart
                  ):
         self.episodes = n_episodes
         self.patience = patience
         self.start_at = start_at
+        self.restart_at_end = restart
         self.stop = False
         self.is_stagnant = False
         self.n = 0
         self.last_keys = []
+        self.restart = False
 
     def reset(self):
         self.stop = False
+        self.restart = False
         self.is_stagnant = False
         self.n = 0
         self.last_keys = []
 
-    def early_stop(self, logs):
+    def is_to_early_stop(self, logs):
         if logs and self.patience is not None and logs[-1]['is_opt_episode']:
             episode, episode_num = logs[-1], logs[-1]['episode']
             cur_keys = [row.get('key') for row in episode['feed_out']]
@@ -52,15 +56,24 @@ class Progress:
                 self.n = 0
                 self.last_keys = cur_keys
 
-    def episode_stopper(self, logs):
+    def is_end_of_episode(self, logs):
         if self.episodes is not None and logs:
             if logs[-1]['episode'] >= self.episodes-1:
                 print('reached end of episodes for this experiment')
                 self.stop = True
 
-    def invoke(self, logs):
-        self.episode_stopper(logs)
-        self.early_stop(logs)
+    def is_to_restart(self, unused_items):
+        if self.restart_at_end:
+            if self.stop:
+                self.restart = True
+            if not unused_items and not self.episodes:
+                self.restart = True
+
+    def invoke(self, logger):
+        self.is_end_of_episode(logger.logs)
+        self.is_to_early_stop(logger.logs)
+        self.is_to_restart(logger.unused_items)
+
 
 
 
