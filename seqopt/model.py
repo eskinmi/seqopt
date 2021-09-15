@@ -84,7 +84,7 @@ class SeqOpt(process.Experiments):
         self.episode += 1
 
     def opt(self, feed):
-        self.progress.invoke(self.logs, self.unused_items, self.initial_population)
+        self.progress.invoke(self.experiment_logs, self.unused_items, self.initial_population)
         if self.progress.restart:
             self.reset_experiment()
             self.progress.reset()

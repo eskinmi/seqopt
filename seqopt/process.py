@@ -9,7 +9,7 @@ class Logs:
         self.initial_population = population
         self.population = self.initial_population
         self.feeds = []
-        self.logs = []
+        self.experiment_logs = []
         self.counter = Counter()
         self.feed = None
         self.feed_out = None
@@ -23,12 +23,12 @@ class Logs:
             self.population = list(self.counter.keys())
 
     def log_episode(self, episode, is_opt):
-        self.logs.append({'episode': episode,
-                          'is_opt_episode': is_opt,
-                          'feed': self.feed,
-                          'feed_out': self.feed_out,
-                          'items_added': self.items_to_try
-                          })
+        self.experiment_logs.append({'episode': episode,
+                                     'is_opt_episode': is_opt,
+                                     'feed': self.feed,
+                                     'feed_out': self.feed_out,
+                                     'items_added': self.items_to_try
+                                     })
 
     @property
     def unused_items(self):
@@ -40,7 +40,7 @@ class Logs:
     def reset_logs(self):
         self.population = self.initial_population
         self.feeds = []
-        self.logs = []
+        self.experiment_logs = []
         self.counter = Counter()
         self.feed = None
         self.feed_out = None
@@ -53,24 +53,28 @@ class Experiments(Logs):
         super().__init__(population=population)
         self.episode = 0
         self.experiment_id = 0
-        self.experiments = {}
-
-    @property
-    def optimized_seq(self):
-        if self.experiments:
-            return self.experiments.get(max(self.experiments))[-1].get('feed_out')
-        else:
-            return self.logs[-1]['feed_out']
+        self.logged_experiments = {}
 
     def add_experiment(self):
-        if self.logs:
-            self.experiments[self.experiment_id] = self.logs
+        if self.experiment_logs:
+            self.logged_experiments[self.experiment_id] = self.experiment_logs
 
     def reset_experiment(self):
         self.add_experiment()
         self.reset_logs()
         self.episode = 0
         self.experiment_id += 1
+
+    @property
+    def experiments(self):
+        return {**self.experiment_logs, self.experiment_id : self.experiment_logs}
+
+    @property
+    def optimized_seq(self):
+        if self.logged_experiments:
+            return self.logged_experiments.get(max(self.logged_experiments))[-1].get('feed_out')
+        else:
+            return self.experiment_logs[-1]['feed_out']
 
 
 class Trials:
