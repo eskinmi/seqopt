@@ -32,7 +32,10 @@ class Logs:
 
     @property
     def unused_items(self):
-        return [item for item in self.population if item not in self.counter.keys()]
+        if self.initial_population:
+            return [item for item in self.population if item not in self.counter.keys()]
+        else:
+            return []
 
     def reset_logs(self):
         self.population = self.initial_population
