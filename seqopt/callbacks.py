@@ -73,7 +73,7 @@ class Progress:
         self.is_end_of_episode(logger.logs)
         self.is_to_early_stop(logger.logs)
         if logger.logs:
-            self.is_to_restart(unused_items, population)
+            self.is_to_restart(logger.unused_items, logger.population)
 
 
 
