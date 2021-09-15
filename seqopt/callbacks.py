@@ -72,7 +72,9 @@ class Progress:
     def invoke(self, logger):
         self.is_end_of_episode(logger.logs)
         self.is_to_early_stop(logger.logs)
-        self.is_to_restart(logger.unused_items)
+        if not logger.logs:
+            self.is_to_restart(logger.unused_items)
+
 
 
 
