@@ -67,7 +67,7 @@ class Experiments(Logs):
 
     @property
     def experiments(self):
-        return {**self.experiment_logs, self.experiment_id : self.experiment_logs}
+        return {**self.logged_experiments, self.experiment_id : self.experiment_logs}
 
     @property
     def optimized_seq(self):
