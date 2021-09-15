@@ -84,7 +84,7 @@ class SeqOpt(process.Experiments):
         self.logger.log_episode(self.episode, self._is_opt_episode)
 
     def opt(self, feed):
-        self.progress.invoke(self.logger.logs)
+        self.progress.invoke(self.logger)
         if self.progress.restart:
             self.reset_experiment()
             self.progress.reset()
