@@ -60,6 +60,7 @@ class Experiments(Logs):
             self.logged_experiments[self.experiment_id] = self.experiment_logs
 
     def reset_experiment(self):
+        print('resetting experiment..')
         self.add_experiment()
         self.reset_logs()
         self.episode = 0

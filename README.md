@@ -11,8 +11,8 @@ input to a system for the new iteration, from which the new rewards are collecte
 
 `Experiment` : An experiment is a complete trial cycle, where all the keys in the  
 population is tried and feedback is collected. Experiments are logged in property  
-`seqopt.experiments`. Each experiment is logged in `seq_opt.experiment_logs` during
-the course of the experiment.
+`seqopt.model.experiments`. Each experiment is logged in `seqopt.model.experiment_logs`  
+during the course of the experiment.
 
 
 ## example use

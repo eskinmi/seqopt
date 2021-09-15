@@ -68,6 +68,8 @@ class Progress:
                 self.restart = True
             if not unused_items and initial_population:
                 self.restart = True
+        if self.restart:
+            print('restarting experiment...')
 
     def invoke(self, logs, unused_items, initial_population):
         self.is_end_of_episode(logs)
