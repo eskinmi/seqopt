@@ -10,9 +10,9 @@ input to a system for the new iteration, from which the new rewards are collecte
 ## terminology
 
 `Experiment` : An experiment is a complete trial cycle, where all the keys in the  
-population is tried and feedback is collected. Experiments are looged at the end  
-of the experiments in `seqopt.model.experiments`. Experiment logs are collected in
-`seqopt.model.logger` object.
+population is tried and feedback is collected. Experiments are logged in property  
+`seqopt.experiments`. Each experiment is logged in `seq_opt.experiment_logs` during
+the course of the experiment.
 
 
 ## example use
@@ -29,21 +29,19 @@ sel = model.selectors.MaxRelative(cutoff_ratio=0.75)
 
 seq_opt = model.SeqOpt(scorer=scr,
                        selector=sel,
-                       episodes=20,
-                       n_try=2,
+                       episodes=None,
+                       n_try=1,
                        add_to='last',
                        opt_interval=2,
-                       reset_experiment=False,
+                       reset_experiment=True,
                        early_stop_patience=2,
                        population=population
                        )
-
+                       
 for feed in input_feeds:
   seq_opt.opt(feed)
   
-print(f'optimized version : {seq_opt.optimized_seq}')
-print(f'experiments : {seq_opt.experiments}')
-print('current experiment logs : {seq_opt.logger.logs}')
+seq_opt.experiments
 ```
 
 ## modules
