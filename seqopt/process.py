@@ -70,11 +70,8 @@ class Experiments(Logs):
         return {**self.logged_experiments, self.experiment_id : self.experiment_logs}
 
     @property
-    def optimized_seq(self):
-        if self.logged_experiments:
-            return self.logged_experiments.get(max(self.logged_experiments))[-1].get('feed_out')
-        else:
-            return self.experiment_logs[-1]['feed_out']
+    def output(self):
+        return self.experiments.get(max(self.experiments))[-1].get('feed_out')
 
 
 class Trials:
