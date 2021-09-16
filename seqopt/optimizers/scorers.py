@@ -2,7 +2,7 @@ import seqopt.optimizers.helpers
 import numpy
 
 
-class ScoringStrategy:
+class Scorers:
     """
     Scoring main class with aggregation strategies, and main score functions call.
         :param per_episode: score per episode (bool)
@@ -44,7 +44,7 @@ class ScoringStrategy:
         return seqopt.optimizers.helpers.reposition(self.score(self.agg(feeds)))
 
 
-class Naive(ScoringStrategy):
+class Naive(Scorers):
     """
     Naive scorer.
         score = reward.
@@ -61,7 +61,7 @@ class Naive(ScoringStrategy):
         return seqopt.optimizers.helpers.feed_naive(feed, self.m_key)
 
 
-class MinMaxNorm(ScoringStrategy):
+class MinMaxNorm(Scorers):
     """
         Min Max Normalizer.
         score = min_max_norm(feed).
@@ -78,7 +78,7 @@ class MinMaxNorm(ScoringStrategy):
         return seqopt.optimizers.helpers.feed_min_max_norm(feed, self.m_key)
 
 
-class LogNorm(ScoringStrategy):
+class LogNorm(Scorers):
     """
         Log normalizer.
         score = log_norm(feed)
@@ -98,7 +98,7 @@ class LogNorm(ScoringStrategy):
         return seqopt.optimizers.helpers.feed_log_norm(feed, self.log_base, self.m_key)
 
 
-class StandardNorm(ScoringStrategy):
+class StandardNorm(Scorers):
     """
         Standard normalizer.
         score = standard_norm(feed).

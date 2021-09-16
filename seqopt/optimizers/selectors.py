@@ -1,31 +1,38 @@
+import seqopt.optimizers.helpers
 
-class MaxRelative:
+
+class Selector:
+    def __call__(self, feed):
+        return seqopt.optimizers.helpers.reposition(self.select(feed))
+
+
+class MaxRelative(Selector):
 
     def __init__(self, cutoff_ratio, key='score'):
         self.key = key
         self.cutoff = cutoff_ratio
 
-    def __call__(self, feed):
+    def select(self, feed):
         _max = max(feed, key=lambda x: x[self.key])[self.key]
         return list(filter(lambda x: x[self.key] >= _max * self.cutoff, feed))
 
 
-class TopN:
+class TopN(Selector):
 
     def __init__(self, n):
         self.n = n
 
-    def __call__(self, feed):
+    def select(self, feed):
         return feed[:self.n]
 
 
-class AbsoluteThreshold:
+class AbsoluteThreshold(Selector):
 
     def __init__(self, threshold, key='score'):
         self.threshold = threshold
         self.key = key
 
-    def __call__(self, feed):
+    def select(self, feed):
         return list(filter(lambda x: x[self.key] >= self.threshold, feed))
 
 
