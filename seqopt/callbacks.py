@@ -73,6 +73,7 @@ class Progress:
             print('consider changing the selection criteria, or the scorer.')
 
     def invoke(self, logs, unused_items, initial_population):
+        self.is_there_ouput(logs)
         self.is_end_of_episode(logs)
         self.is_to_early_stop(logs)
         self.is_to_restart(unused_items, initial_population)
