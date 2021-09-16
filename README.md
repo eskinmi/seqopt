@@ -67,12 +67,12 @@ class CustomScorer(Scorers):
 ```
 
 ### selectors
-selectors manage the selecting schema for every optimization round. Currently,
-the package has two out of box selectors, `TopN` and `MaxRelative`.
-Similarly to scorers, any selection method can be given to the model,  
-which has a call method that inputs the output of the scorer (latest feed or  
-aggregated feeds).  
-The `Selector` object allows users to use make their own selector.
+Telectors manage the selecting method for every optimization round. Currently,
+the package has three out of box selectors, `TopN`, `MaxRelative` and
+`AbsoluteThreshold`. Similar to scorers, any selection method can be given  
+to the model, which has a call method that inputs the output of the scorer  
+(latest feed or  aggregated feeds). The `Selector` object allows users  
+to make their own selector.
 
 
 ```py
@@ -80,7 +80,7 @@ class CustomSelector(Selector):
 
     def select(self, feed):
         #selecting operation
-        return selected feed.
+        return selected_feed.
 ```
 
 
