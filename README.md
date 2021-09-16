@@ -53,7 +53,8 @@ The `Scorers` object allows users to use make their own scorers.
 In order to write a custom scorer, one can use the following approach:
 
 ```py
-class CustomScorer(Scorers):
+from seqopt import optimizers
+class CustomScorer(optimizers.scorers.Scorer):
 
     def __init__(self,
                  per_episode=True,
@@ -75,7 +76,8 @@ allows users to make their own selector.
 
 
 ```py
-class CustomSelector(Selector):
+from seqopt import optimizers
+class CustomSelector(optimizers.selectors.Selector):
 
     def __init__(self, a, b):
         super().__init__()
