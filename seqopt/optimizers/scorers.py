@@ -118,8 +118,8 @@ class StandardNorm(Scorers):
 _default_scorer = Naive(per_episode=True)
 
 
-def do_score(scorer, logger):
+def do_score(scorer, feeds):
     if scorer is not None:
-        return scorer(logger)
+        return scorer(feeds)
     else:
-        return _default_scorer(logger)
+        return _default_scorer(feeds)
