@@ -69,18 +69,23 @@ class CustomScorer(Scorers):
 ### selectors
 Telectors manage the selecting method for every optimization round. Currently,
 the package has three out of box selectors, `TopN`, `MaxRelative` and
-`AbsoluteThreshold`. Similar to scorers, any selection method can be given  
-to the model, which has a call method that inputs the output of the scorer  
-(latest feed or  aggregated feeds). The `Selector` object allows users  
-to make their own selector.
+`AbsoluteThreshold`. Similar to scorers, any selection method can be given to the model , which has a call  
+method that inputs the output of the scorer (latest feed or  aggregated feeds). The `Selector` object  
+allows users to make their own selector.
 
 
 ```py
 class CustomSelector(Selector):
 
+    def __init__(self, a, b):
+        super().__init__()
+        self.a = a
+        self.b = b
+
     def select(self, feed):
         #selecting operation
         return selected_feed.
+        
 ```
 
 
