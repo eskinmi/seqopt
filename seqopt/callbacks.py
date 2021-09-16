@@ -46,8 +46,8 @@ class Progress:
             if self.start_at <= episode_num and self.last_keys == cur_keys:
                 self.n += 1
                 if self.n >= self.patience:
-                    print('reached the optimized state, process can be ended.')
-                    print('process will be stopped.')
+                    # print('reached the optimized state, process can be ended.')
+                    # print('process will be stopped.')
                     self.is_stagnant = True
                     self.stop = True
                 else:
@@ -59,7 +59,7 @@ class Progress:
     def is_end_of_episode(self, logs):
         if self.episodes is not None and logs:
             if logs[-1]['episode'] >= self.episodes-1:
-                print('reached end of episodes for this experiment')
+                # print('reached end of episodes for this experiment')
                 self.stop = True
 
     def is_to_restart(self, unused_items, initial_population):
@@ -68,8 +68,8 @@ class Progress:
                 self.restart = True
             if not unused_items and initial_population:
                 self.restart = True
-        if self.restart:
-            print('restarting experiment...')
+        # if self.restart:
+            # print('restarting experiment...')
 
     def invoke(self, logs, unused_items, initial_population):
         self.is_end_of_episode(logs)
