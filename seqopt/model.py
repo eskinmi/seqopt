@@ -90,7 +90,10 @@ class SeqOpt(process.Experiments):
             self.progress.reset()
             self._run_opt_episode(feed)
         elif self.progress.stop:
-            self.reset_experiment()
+            if self.experiment_logs:
+                self.reset_experiment()
+            else:
+                pass
         else:
             self._run_opt_episode(feed)
 

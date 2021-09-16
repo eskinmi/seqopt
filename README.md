@@ -44,7 +44,7 @@ for feed in input_feeds:
 seq_opt.experiments
 ```
 
-## modules
+## optimizers
 ### scorers
 `seqopt.scorer` module manages the scoring schema of feed from a given
 experiment, with out of box such as `LogNorm`, `MinMaxNorm`, or `StandardNorm`.
