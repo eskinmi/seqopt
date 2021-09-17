@@ -45,7 +45,6 @@ class Logs:
             return []
 
     def reset_logs(self):
-        self.population = self.initial_population
         self.feeds = []
         self.experiment_logs = []
         self.counter = Counter()
