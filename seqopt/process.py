@@ -5,9 +5,10 @@ from seqopt.optimizers.helpers import reposition_by_index
 
 class Logs:
 
-    def __init__(self, population=None):
+    def __init__(self, population=None, population_growth=False):
         self.initial_population = population
-        self.population = self.initial_population
+        self.population_growth = population_growth
+        self.population = None
         self.feeds = []
         self.experiment_logs = []
         self.counter = Counter()
@@ -15,12 +16,20 @@ class Logs:
         self.feed_out = None
         self.items_to_try = None
 
+
+    @property
+    def population(self):
+        if not self.initial_population:
+            return set(self.counter.keys())
+        elif self.population_growth:
+            return set.union(set(self.initial_population), set(self.counter.keys()))
+        else:
+            return self.initial_population
+
     def log_feed(self, feed):
         self.feeds.append(feed)
         self.feed = feed
         self.counter.update([i['key'] for i in feed])
-        if self.initial_population is None:
-            self.population = list(self.counter.keys())
 
     def log_episode(self, episode, is_opt):
         self.experiment_logs.append({'episode': episode,
@@ -49,8 +58,8 @@ class Logs:
 
 class Experiments(Logs):
 
-    def __init__(self, population):
-        super().__init__(population=population)
+    def __init__(self, population, population_growth):
+        super().__init__(population, population_growth)
         self.episode = 0
         self.experiment_id = 0
         self.logged_experiments = {}

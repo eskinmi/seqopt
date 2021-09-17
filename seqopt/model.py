@@ -45,13 +45,14 @@ class SeqOpt(process.Experiments):
                  n_try=0,
                  add_to='last',
                  population=None,
+                 population_growth=False,
                  episodes=None,
                  opt_interval=1,
                  early_stop_patience=None,
                  early_stop_start_at=0,
                  reset_experiment=False
                  ):
-        super().__init__(population=population)
+        super().__init__(population=population, population_growth=population_growth)
         self.interval = opt_interval
         self.selector = selector
         self.scorer = scorer
