@@ -33,6 +33,7 @@ class SeqOpt(process.Experiments):
         n_try: number of items to try per opt (int)
         add_to: add index strategy (str)
         population: population keys list (list[str])
+        population_growth: allow population growth if new key is in feed (bool)
         episodes: number of episodes (int)
         opt_interval: episodes intervals for optimization (int)
         progress: progress callback (seqopt.callbacks.Progress)

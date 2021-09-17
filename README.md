@@ -48,9 +48,11 @@ seq_opt.experiments
 ### scorers
 `seqopt.scorer` module manages the scoring schema of feed from a given
 experiment, with out of box such as `LogNorm`, `MinMaxNorm`, or `StandardNorm`.
-
+Scorer.score function accepts a feed argument, which is either the last feed,
+or aggregation of all feeds in the experiment (based on per_episode arg).
 The `Scorers` object allows users to use make their own scorers.  
 In order to write a custom scorer, one can use the following approach:
+
 
 ```py
 from seqopt import optimizers
@@ -68,7 +70,7 @@ class CustomScorer(optimizers.scorers.Scorer):
 ```
 
 ### selectors
-Telectors manage the selecting method for every optimization round. Currently,
+Selectors manage the selecting method for every optimization round. Currently,
 the package has three out of box selectors, `TopN`, `MaxRelative` and
 `AbsoluteThreshold`. Similar to scorers, any selection method can be given to the model , which has a call  
 method that inputs the output of the scorer (latest feed or  aggregated feeds). The `Selector` object  
