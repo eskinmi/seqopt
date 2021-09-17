@@ -8,14 +8,12 @@ class Logs:
     def __init__(self, population=None, population_growth=False):
         self.initial_population = population
         self.population_growth = population_growth
-        self.population = None
         self.feeds = []
         self.experiment_logs = []
         self.counter = Counter()
         self.feed = None
         self.feed_out = None
         self.items_to_try = None
-
 
     @property
     def population(self):
