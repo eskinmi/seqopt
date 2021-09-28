@@ -4,6 +4,23 @@ from seqopt.optimizers.helpers import reposition_by_index
 
 
 class Logs:
+    """
+    class : seqopt.process.Logs
+    Hosts the experiment logs, in a fixed manner.
+    Schema for the experiment logs cannot be changed.
+
+        :param population: population keys (list[str])
+        :param population_growth: allow popu. growth (bool)
+
+    logs schema:
+        [{
+            'episode' : int,
+            'is_opt_episode' : bool,
+            'feed' : list[dict],
+            'feed_opt' : list[dict],
+            'items_added' : list[str]
+        }]
+    """
 
     def __init__(self, population=None, population_growth=False):
         self.initial_population = population
@@ -17,6 +34,13 @@ class Logs:
 
     @property
     def population(self):
+        """
+        Gets population. If initial population is
+        set to None, only the keys in the feeds
+        will be taken as population.
+        :return:
+            list[str]
+        """
         if not self.initial_population:
             return set(self.counter.keys())
         elif self.population_growth:
@@ -39,12 +63,25 @@ class Logs:
 
     @property
     def unused_items(self):
+        """
+        Collects items that are not seen in the
+         feeds of the current experiment, or tried
+         by the model.
+        :return:
+            list[str]
+        """
         if self.initial_population:
             return [item for item in self.population if item not in self.counter.keys()]
         else:
             return []
 
     def reset_logs(self):
+        """
+        Reset experiment logs of the experiment.
+         Everything except the population is reset
+         here (assuming that if a key appeared in
+         the feed before, it's part of the population).
+        """
         self.feeds = []
         self.experiment_logs = []
         self.counter = Counter()
@@ -54,6 +91,13 @@ class Logs:
 
 
 class Experiments(Logs):
+    """
+    Experiments class inherits the Logs (seqopt.process.Logs)
+     and manages the experiments within the model.
+
+        :param population: population keys (list[str])
+        :param population_growth: allow popu. growth (bool)
+    """
 
     def __init__(self, population, population_growth):
         super().__init__(population, population_growth)
@@ -81,6 +125,16 @@ class Experiments(Logs):
 
 
 class Trials:
+    """
+    Manages the item trials. At the end of each episode,
+     adds the new items from the population, that is not
+     yet seen.
+
+     :param n: number of items to add (int)
+     :param add_to: add items to location (str)
+        can take values:
+            last, first, middle, random.
+    """
 
     def __init__(self, n, add_to='last'):
         self.n = n

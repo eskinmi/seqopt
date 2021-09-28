@@ -2,13 +2,21 @@ import seqopt.optimizers.helpers
 
 
 class Selector:
-
+    """
+    Selector main class.
+    """
     def __call__(self, feed):
         return seqopt.optimizers.helpers.reposition(self.select(feed))
 
 
 class MaxRelative(Selector):
+    """
+    Makes selection based on the cutoff value
+        relative to the max score in scored feed.
 
+        :param cutoff_ratio: cutoff_ratio (int/float)
+        :param key: key to apply the rule on (str)
+    """
     def __init__(self, cutoff_ratio, key='score'):
         super().__init__()
         self.key = key
@@ -20,6 +28,10 @@ class MaxRelative(Selector):
 
 
 class TopN(Selector):
+    """
+    Selects top n items in the scored feed.
+        :param n: number of items (int)
+    """
 
     def __init__(self, n):
         self.n = n
@@ -30,7 +42,13 @@ class TopN(Selector):
 
 
 class AbsoluteThreshold(Selector):
+    """
+    Makes selection based on the a constant
+        (an absolute threshold).
 
+        :param threshold: threshold (int/float)
+        :param key: key to apply the rule on (str)
+    """
     def __init__(self, threshold, key='score'):
         super().__init__()
         self.threshold = threshold
