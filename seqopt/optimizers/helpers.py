@@ -39,6 +39,15 @@ def feed_min_max_norm(feed, name):
     return metrics
 
 
+def feed_share(feed, name):
+    metrics = []
+    sum_ = sum([i['reward'] for i in feed])
+    for i in feed:
+        i[name] = i['reward'] / sum_
+        metrics.append(i)
+    return metrics
+
+
 def feed_log_norm(feed, log_base, name):
     metrics = []
     for i in feed:

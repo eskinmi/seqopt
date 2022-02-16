@@ -66,6 +66,23 @@ class Naive(Scorers):
         return seqopt.optimizers.helpers.feed_naive(feed, self.m_key)
 
 
+class Share(Scorers):
+    """
+    Naive scorer.
+        score = reward.
+    :return:
+        list[dict] with new key (score).
+    """
+    def __init__(self,
+                 per_episode=True,
+                 agg_strategy='sum'
+                 ):
+        super().__init__(per_episode, agg_strategy)
+
+    def score(self, feed):
+        return seqopt.optimizers.helpers.feed_share(feed, self.m_key)
+
+
 class MinMaxNorm(Scorers):
     """
         Min Max Normalizer.

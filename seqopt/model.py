@@ -11,7 +11,7 @@ class SeqOpt(process.Experiments):
 
     The model that optimizes the given initial
     sequence based on the feedback. There are
-    two (2) important submodules the model inputs:
+    two important submodules the model inputs:
         - seqopt.optimizers.optimizers
             Manages the optimization with its given
                 configurations / strategy.
