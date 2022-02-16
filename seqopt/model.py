@@ -74,13 +74,18 @@ class SeqOpt(process.Experiments):
         return False if bool(self.episode % self.interval) else True
 
     def _add_trial_items(self):
+        """
+        add new trial items to the feed out.
+        """
         self.items_to_try, self.feed_out = self.trials.run(self.feed_out, self.unused_items)
 
-    def _run_opt_episode(self, feed):
+    def opt_episode(self, feed):
         self.log_feed(feed)
         if self._is_opt_episode:
             self.feed_out = selectors.apply(
-                self.selector, scorers.apply(self.scorer, self.feeds))
+                self.selector,
+                scorers.apply(self.scorer, self.feeds)
+            )
             self._add_trial_items()
         self.log_episode(self.episode, self._is_opt_episode)
         self.episode += 1
@@ -90,14 +95,14 @@ class SeqOpt(process.Experiments):
         if self.progress.restart:
             self.reset_experiment()
             self.progress.reset()
-            self._run_opt_episode(feed)
+            self.opt_episode(feed)
         elif self.progress.stop:
             if self.experiment_logs:
                 self.reset_experiment()
             else:
                 pass
         else:
-            self._run_opt_episode(feed)
+            self.opt_episode(feed)
 
 
 def load(path):

@@ -66,14 +66,14 @@ class Progress:
             if not unused_items and initial_population:
                 self.restart = True
 
-    def is_there_ouput(self, logs):
+    def is_there_output(self, logs):
         if logs and not logs[-1]['feed_out']:
             self.stop = True
             print('based on given optimizers and input, no output is left!')
             print('consider changing the selection criteria, or the scorer.')
 
     def invoke(self, logs, unused_items, initial_population):
-        self.is_there_ouput(logs)
+        self.is_there_output(logs)
         self.is_end_of_episode(logs)
         self.is_to_early_stop(logs)
         self.is_to_restart(unused_items, initial_population)
