@@ -30,6 +30,19 @@ class Scorers(ABC):
         else:
             self._agg_strategy = value
 
+    def _agg(self, feeds):
+        """
+        apply aggregation to feeds
+        with given aggregation method.
+        """
+        units_dict = {}
+        [
+            units_dict.update({i['key']: units_dict.get(i['key'], []) + [i['reward']]})
+            for feed in feeds for i in feed
+        ]
+        units_dict_agg = {k: self.agg_method(v) for k, v in units_dict.items()}
+        return [{'key': k, 'pos': 0, 'reward': v} for k, v in units_dict_agg.items()]
+
     def agg(self, feeds):
         """
         Aggregate all logged feeds based on given
@@ -39,14 +52,8 @@ class Scorers(ABC):
             aggregated feeds (list)
         """
         if not self.per_episode:
-            units_dict = {}
-            [
-                units_dict.update({i['key']: units_dict.get(i['key'], []) + [i['reward']]})
-                for feed in feeds for i in feed
-             ]
-            units_dict_agg = {k: self.agg_method(v) for k,v in units_dict.items()}
-            agg_list = [{'key': k, 'pos': 0, 'reward': v} for k, v in units_dict_agg.items()]
-            return seqopt.optimizers.helpers.reposition(agg_list, 'reward')
+            agg_feed = self._agg(feeds)
+            return seqopt.optimizers.helpers.reposition(agg_feed, 'reward')
         else:
             return seqopt.optimizers.helpers.reposition(feeds[-1], 'reward')
 
