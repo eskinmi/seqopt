@@ -42,7 +42,7 @@ class Scorers(ABC):
             return seqopt.optimizers.helpers.reposition(feeds[-1], 'reward')
 
     @abstractmethod
-    def score(self):
+    def score(self, feed):
         pass
 
     def apply(self, feeds):

@@ -7,7 +7,7 @@ class Selector(ABC):
     Selector main class.
     """
     @abstractmethod
-    def select(self):
+    def select(self, feed):
         pass
 
     def apply(self, feed):
