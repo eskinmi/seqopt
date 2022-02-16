@@ -65,6 +65,6 @@ class AbsoluteThreshold(Selector):
 
 def do_select(selector, feed):
     if selector is not None:
-        return selector(feed)
+        return selector.appy(feed)
     else:
         return feed
