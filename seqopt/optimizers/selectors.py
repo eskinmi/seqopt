@@ -63,7 +63,7 @@ class AbsoluteThreshold(Selector):
         return list(filter(lambda x: x[self.key] >= self.threshold, feed))
 
 
-def do_select(selector, feed):
+def apply(selector, feed):
     if selector is not None:
         return selector.apply(feed)
     else:

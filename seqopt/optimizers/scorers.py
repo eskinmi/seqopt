@@ -24,9 +24,9 @@ class Scorers(ABC):
 
     @agg_strategy.setter
     def agg_strategy(self, value):
-        acceptables = ['mean', 'sum', 'min', 'max']
-        if value not in acceptables:
-            raise ValueError(f'agg_strategy can only be : {acceptables}')
+        acceptable = ['mean', 'sum', 'min', 'max']
+        if value not in acceptable:
+            raise ValueError(f'agg_strategy can only be : {acceptable}')
         else:
             self._agg_strategy = value
 
@@ -149,7 +149,7 @@ class StandardNorm(Scorers):
 _default_scorer = Naive(per_episode=True)
 
 
-def do_score(scorer, feeds):
+def apply(scorer, feeds):
     if scorer is not None:
         return scorer.apply(feeds)
     else:

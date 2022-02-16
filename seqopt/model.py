@@ -79,8 +79,8 @@ class SeqOpt(process.Experiments):
     def _run_opt_episode(self, feed):
         self.log_feed(feed)
         if self._is_opt_episode:
-            self.feed_out = selectors.do_select(
-                self.selector, scorers.do_score(self.scorer, self.feeds))
+            self.feed_out = selectors.apply(
+                self.selector, scorers.apply(self.scorer, self.feeds))
             self._add_trial_items()
         self.log_episode(self.episode, self._is_opt_episode)
         self.episode += 1
@@ -120,7 +120,3 @@ def save(model, path):
     """
     with open(f'{path}/seqopt', 'w') as f:
         pickle.dump(model, f)
-
-
-
-
