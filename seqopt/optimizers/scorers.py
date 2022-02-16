@@ -14,12 +14,21 @@ class Scorers(ABC):
                  agg_strategy='mean',
                  ):
         self.per_episode = per_episode
-        self._acc_strategy = ['mean', 'sum', 'min', 'max']
-        if agg_strategy not in self._acc_strategy:
-            raise ValueError(f'agg_strategy must be one of these values : {self._acc_strategy}')
         self.agg_strategy = agg_strategy
         self.agg_method = getattr(numpy, self.agg_strategy)
         self.m_key = 'score'
+
+    @property
+    def agg_strategy(self):
+        return self._agg_strategy
+
+    @agg_strategy.setter
+    def agg_strategy(self, value):
+        acceptables = ['mean', 'sum', 'min', 'max']
+        if value not in acceptables:
+            raise ValueError(f'agg_strategy can only be : {acceptables}')
+        else:
+            self._agg_strategy = value
 
     def agg(self, feeds):
         """
