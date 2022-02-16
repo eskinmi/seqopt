@@ -1,8 +1,9 @@
 import seqopt.optimizers.helpers
 import numpy
+from abc import ABC, abstractmethod
 
 
-class Scorers:
+class Scorers(ABC):
     """
     Scoring main class with aggregation strategies, and main score functions call.
         :param per_episode: score per episode (bool)
@@ -18,7 +19,7 @@ class Scorers:
             raise ValueError(f'agg_strategy must be one of these values : {self._acc_strategy}')
         self.agg_strategy = agg_strategy
         self.agg_method = getattr(numpy, self.agg_strategy)
-        self.m_key='score'
+        self.m_key = 'score'
 
     def agg(self, feeds):
         """
@@ -40,7 +41,11 @@ class Scorers:
         else:
             return seqopt.optimizers.helpers.reposition(feeds[-1], 'reward')
 
-    def __call__(self, feeds):
+    @abstractmethod
+    def score(self):
+        pass
+
+    def apply(self, feeds):
         return seqopt.optimizers.helpers.reposition(self.score(self.agg(feeds)))
 
 
@@ -120,6 +125,6 @@ _default_scorer = Naive(per_episode=True)
 
 def do_score(scorer, feeds):
     if scorer is not None:
-        return scorer(feeds)
+        return scorer.apply(feeds)
     else:
-        return _default_scorer(feeds)
+        return _default_scorer.apply(feeds)

@@ -1,11 +1,16 @@
 import seqopt.optimizers.helpers
+from abc import ABC, abstractmethod
 
 
-class Selector:
+class Selector(ABC):
     """
     Selector main class.
     """
-    def __call__(self, feed):
+    @abstractmethod
+    def select(self):
+        pass
+
+    def apply(self, feed):
         return seqopt.optimizers.helpers.reposition(self.select(feed))
 
 
