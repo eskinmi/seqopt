@@ -84,8 +84,8 @@ class Naive(Scorers):
 
 class Share(Scorers):
     """
-    Naive scorer.
-        score = reward.
+    Share scorer.
+        score = 1 / sum(rewards)
     :return:
         list[dict] with new key (score).
     """

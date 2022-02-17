@@ -64,3 +64,4 @@ def feed_standard_score(feeds, name):
         i[name] = round((i['reward'] - avg_) / std_, 5)
         metrics.append(i)
     return metrics
+
